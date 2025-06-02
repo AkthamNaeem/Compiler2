@@ -890,6 +890,200 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         return new ProtectedModifier();
     }
 
+    @Override
+    public AstNode visitComponentDef(AngularParser.ComponentDefContext ctx) {
+        ComponentDef component = new ComponentDef();
+
+        for (AngularParser.ComponentPropertyDefContext propCtx : ctx.props) {
+            ComponentPropertyDef prop = (ComponentPropertyDef) visit(propCtx);
+            component.addProperty(prop);
+        }
+
+        return component;
+    }
+
+    @Override
+    public AstNode visitComponentPropertyDef(AngularParser.ComponentPropertyDefContext ctx) {
+        ComponentPropertyDef prop = new ComponentPropertyDef();
+
+        prop.setName(ctx.propertyName().getText());
+
+        if (ctx.propertyValue() != null) {
+            prop.setValue(visit(ctx.propertyValue()));
+        }
+
+        if (ctx.REQUIRED() != null) {
+            prop.setRequired(true);
+        }
+
+        return prop;
+    }
+
+
+    @Override
+    public AstNode visitComponentDef(AngularParser.ComponentDefContext ctx) {
+        ComponentDef component = new ComponentDef();
+
+        if (ctx.props != null) {
+            for (AngularParser.ComponentPropertyDefContext propCtx : ctx.props) {
+                AstNode property = visit(propCtx);
+                if (property instanceof ComponentPropertyDef) {
+                    component.addProperty((ComponentPropertyDef) property);
+                }
+            }
+        }
+
+        return component;
+    }
+
+    // =============== Property Visit Methods ===============
+
+    @Override
+    public AstNode visitSelectorProperty(AngularParser.SelectorPropertyContext ctx) {
+        if (ctx.selectorDef() == null) return null;
+
+        SelectorProperty prop = new SelectorProperty();
+        prop.setSelector(cleanString(ctx.selectorDef().STRING_LITERAL()));
+        return prop;
+    }
+
+    @Override
+    public AstNode visitStandaloneProperty(AngularParser.StandalonePropertyContext ctx) {
+        if (ctx.standaloneDef() == null) return null;
+
+        StandaloneProperty prop = new StandaloneProperty();
+        prop.setStandalone(ctx.standaloneDef().TRUE() != null);
+        return prop;
+    }
+
+    @Override
+    public AstNode visitImportsProperty(AngularParser.ImportsPropertyContext ctx) {
+        if (ctx.importsDef() == null) return null;
+
+        ImportsProperty prop = new ImportsProperty();
+        List<String> imports = new ArrayList<>();
+
+        for (TerminalNode str : ctx.importsDef().STRING_LITERAL()) {
+            imports.add(cleanString(str));
+        }
+
+        prop.setImports(imports);
+        return prop;
+    }
+
+    @Override
+    public AstNode visitTemplateProperty(AngularParser.TemplatePropertyContext ctx) {
+        if (ctx.templateDef() == null) return null;
+
+        TemplateProperty prop = new TemplateProperty();
+        prop.setTemplate(cleanTemplate(ctx.templateDef().TEMPLATE_STRING()));
+        return prop;
+    }
+
+    @Override
+    public AstNode visitTemplateUrlProperty(AngularParser.TemplateUrlPropertyContext ctx) {
+        if (ctx.templateUrlDef() == null) return null;
+
+        TemplateUrlProperty prop = new TemplateUrlProperty();
+        prop.setTemplateUrl(cleanString(ctx.templateUrlDef().STRING_LITERAL()));
+        return prop;
+    }
+
+    @Override
+    public AstNode visitStylesProperty(AngularParser.StylesPropertyContext ctx) {
+        if (ctx.stylesDef() == null) return null;
+
+        StylesProperty prop = new StylesProperty();
+        List<String> styles = new ArrayList<>();
+
+        for (TerminalNode str : ctx.stylesDef().STRING_LITERAL()) {
+            styles.add(cleanString(str));
+        }
+
+        prop.setStyles(styles);
+        return prop;
+    }
+
+    @Override
+    public AstNode visitStyleUrlsProperty(AngularParser.StyleUrlsPropertyContext ctx) {
+        if (ctx.styleUrlsDef() == null) return null;
+
+        StylesUrlProperty prop = new StylesUrlProperty();
+        List<String> urls = new ArrayList<>();
+
+        for (TerminalNode str : ctx.styleUrlsDef().STRING_LITERAL()) {
+            urls.add(cleanString(str));
+        }
+
+        prop.setStyleUrls(urls);
+        return prop;
+    }
+
+    @Override
+    public AstNode visitComponentCustomProperty(AngularParser.ComponentCustomPropertyContext ctx) {
+        if (ctx.prop == null) return null;
+
+        CustomProperty prop = new CustomProperty();
+        Map<String, Object> properties = new HashMap<>();
+
+        String key = ctx.prop.IDENTIFIER().getText();
+        Object value = parseValue(ctx.prop.value());
+
+        properties.put(key, value);
+        prop.setProperties(properties);
+        return prop;
+    }
+
+    // =============== Helper Methods ===============
+
+    private String cleanString(TerminalNode node) {
+        return node != null ?
+                node.getText().replaceAll("^['\"]|['\"]$", "") :
+                "";
+    }
+
+    private String cleanTemplate(TerminalNode node) {
+        return node != null ?
+                node.getText().replaceAll("^`|`$", "") :
+                "";
+    }
+
+    private Object parseValue(AngularParser.PropertyValueContext ctx) {
+        if (ctx == null) return null;
+
+        if (ctx.STRING_LITERAL() != null) {
+            return cleanString(ctx.STRING_LITERAL());
+        }
+        else if (ctx.NUMBER() != null) {
+            try {
+                return Double.parseDouble(ctx.NUMBER().getText());
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        }
+        else if (ctx.TRUE() != null) {
+            return true;
+        }
+        else if (ctx.FALSE() != null) {
+            return false;
+        }
+        else if (ctx.arrayValue() != null) {
+            List<Object> list = new ArrayList<>();
+            for (AngularParser.PropertyValueContext item : ctx.arrayValue().propertyValue()) {
+                list.add(parseValue(item));
+            }
+            return list;
+        }
+        else if (ctx.objectValue() != null) {
+            Map<String, Object> map = new HashMap<>();
+            for (AngularParser.PropertyPairContext pair : ctx.objectValue().propertyPair()) {
+                map.put(pair.IDENTIFIER().getText(), parseValue(pair.propertyValue()));
+            }
+            return map;
+        }
+
+        return null;
+    }
 
 
 }

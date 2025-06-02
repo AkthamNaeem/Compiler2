@@ -59,7 +59,21 @@ public interface AstVisitor<T> {
     T visitSymbolContent(SymbolContent node);
     T visitNumberContent(NumberContent node);
     T visitTemplateSubstitution(TemplateSubstitution node);
+    // modifiers:
     T visitPublicModifier(PublicModifier node);
     T visitPrivateModifier(PrivateModifier node);
     T visitProtectedModifier(ProtectedModifier node);
+    // components:
+    T visitComponentDef(ComponentDef node);
+    T visitComponentPropertyDef(ComponentPropertyDef node);
+    T visitComponentDef(ComponentDef node);
+    T visitSelectorProperty(SelectorProperty node);
+    T visitStandaloneProperty(StandaloneProperty node);
+    T visitImportsProperty(ImportsProperty node);
+    T visitTemplateProperty(TemplateProperty node);
+    T visitTemplateUrlProperty(TemplateUrlProperty node);
+    T visitStylesProperty(StylesProperty node);
+    T visitStylesUrlProperty(StylesUrlProperty node);
+    T visitCustomProperty(CustomProperty node);
+
 }
