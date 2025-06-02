@@ -1520,5 +1520,39 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         );
         return value;
     }
+    @Override
+    public AstNode visitCssSelector(AngularParser.CssSelectorContext ctx) {
+        CssSelector selector = new CssSelector();
+
+        // معالجة البادئة (إن وجدت)
+        if (ctx.DOT() != null) {
+            selector.setPrefix(".");
+        } else if (ctx.HASHTAG() != null) {
+            selector.setPrefix("#");
+        }
+
+        // المحدد الأساسي
+        selector.setBase((CssKey) visit(ctx.cssKey(0)));
+
+        // المعالجات اللاحقة (pseudo-classes)
+        for (int i = 1; i < ctx.cssKey().size(); i++) {
+            selector.addModifier((CssKey) visit(ctx.cssKey(i)));
+        }
+
+        return selector;
+    }
+
+    @Override
+    public AstNode visitCssKeyValue(AngularParser.CssKeyValueContext ctx) {
+        CssKeyValue kv = new CssKeyValue();
+        kv.setKey((CssKey) visit(ctx.cssKey()));
+
+        // معالجة جميع القيم (قد تكون متعددة كما في margin: 10px 20px)
+        for (AngularParser.CssValueContext valCtx : ctx.cssValue()) {
+            kv.addValue((CssValue) visit(valCtx));
+        }
+
+        return kv;
+    }
 
 }

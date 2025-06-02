@@ -118,5 +118,6 @@ public interface AstVisitor<T> {
     T visitNumericCssValue(NumericCssValue node);
     T visitIdentifierCssValue(IdentifierCssValue node);
     T visitColorCssValue(ColorCssValue node);
+    T visitCssSelector(CssSelector node);
 
 }
