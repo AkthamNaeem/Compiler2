@@ -66,5 +66,7 @@ public interface AstVisitor<T> {
     T visitDoWhileLoop(DoWhileLoop node);
     T visitForEachLoop(ForEachLoop node);
 
+    T visitClassObjectDeclaration(ClassObjectDeclaration node);
+
     // 
 }

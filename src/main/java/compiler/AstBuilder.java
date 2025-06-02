@@ -761,4 +761,27 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
 
         return forEachLoop;
     }
+
+
+    @Override
+    public AstNode visitClassObjectDeclaration(AngularParser.ClassObjectDeclarationContext ctx) {
+        ClassObjectDeclaration classObjDecl = new ClassObjectDeclaration();
+
+        // declarationType: LET | VAR | CONST
+        if (ctx.LET() != null) {
+            classObjDecl.setDeclarationType("let");
+        } else if (ctx.VAR() != null) {
+            classObjDecl.setDeclarationType("var");
+        } else {
+            classObjDecl.setDeclarationType("const");
+        }
+
+        // name: IDENTIFIER → String
+        classObjDecl.setName(ctx.name.getText());
+
+        // value: classValue → AstNode
+        classObjDecl.setValue(visit(ctx.value));
+
+        return classObjDecl;
+    }
 }
