@@ -572,4 +572,26 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
     public AstNode visitIdentifierValue(AngularParser.IdentifierValueContext ctx) {
         return new IdentifierValue(ctx.id.getText());
     }
+
+
+    @Override
+    public AstNode visitBlockWithBraces(AngularParser.BlockWithBracesContext ctx) {
+        BlockWithBraces block = new BlockWithBraces();
+        block.setStartLine(ctx.start.getLine());
+        block.setEndLine(ctx.stop.getLine());
+
+        ctx.statements.forEach(stmtCtx ->
+                block.addStatement(visit(stmtCtx)));
+
+        return block;
+    }
+
+    @Override
+    public AstNode visitSingleStatementBlock(AngularParser.SingleStatementBlockContext ctx) {
+        SingleStatementBlock block = new SingleStatementBlock();
+        block.setStartLine(ctx.start.getLine());
+        block.setEndLine(ctx.stop.getLine());
+        block.setStatement(visit(ctx.singleStmt));
+        return block;
+    }
 }

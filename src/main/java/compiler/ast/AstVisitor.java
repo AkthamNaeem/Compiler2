@@ -44,6 +44,9 @@ public interface AstVisitor<T> {
     T visitBooleanValue(BooleanValue node);
     T visitIdentifierValue(IdentifierValue node);
 
+    T visitBlockWithBraces(BlockWithBraces node);
+    T visitSingleStatementBlock(SingleStatementBlock node);
+
 
     // 
 }
