@@ -28,4 +28,5 @@ public interface AstVisitor<T> {
     T visitCustomType(CustomType node);
     T visitArrayValues(ArrayValues node);
     T visitObjectNode(ObjectNode node);
+    T visitObjectValue(ObjectValue node);
 }
