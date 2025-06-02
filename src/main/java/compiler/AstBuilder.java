@@ -1699,4 +1699,457 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         return arr;
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @Override
+    public AstNode visitInstruction(AngularParser.InstructionContext ctx) {
+        Instruction instruction = new Instruction();
+
+        // Process all statements
+        for (AngularParser.StatementContext stmtCtx : ctx.statement()) {
+            instruction.addStatement(visit(stmtCtx));
+        }
+
+        return instruction;
+    }
+
+
+    @Override
+    public AstNode visitInterfaceObject(AngularParser.InterfaceObjectContext ctx) {
+        InterfaceObject node = new InterfaceObject();
+        node.setName(ctx.name.getText());
+        node.setType(visit(ctx.type));
+        return node;
+    }
+
+    @Override
+    public AstNode visitClassVariableDeclaration(AngularParser.ClassVariableDeclarationContext ctx) {
+        ClassVariableDeclaration node = new ClassVariableDeclaration();
+        node.setVariableDeclaration(visit(ctx.varDecl));  // زيارة variableDeclarationWithinClass
+        return node;
+    }
+
+    @Override
+    public AstNode visitClassMethodDeclaration(AngularParser.ClassMethodDeclarationContext ctx) {
+        ClassMethodDeclaration node = new ClassMethodDeclaration();
+        node.setMethodDeclaration(visit(ctx.method));  // زيارة functionDeclarationWithinClass
+        return node;
+    }
+
+    @Override
+    public AstNode visitClassFunctionCall(AngularParser.ClassFunctionCallContext ctx) {
+        ClassFunctionCall node = new ClassFunctionCall();
+        node.setFunctionCall(visit(ctx.call));  // زيارة functionCall
+        return node;
+    }
+
+
+    @Override
+    public AstNode visitImportModule(AngularParser.ImportModuleContext ctx) {
+        ImportModule node = new ImportModule();
+
+        for (AngularParser.ImportSpecifierContext importCtx : ctx.imports) {
+            node.addImport(visit(importCtx));
+        }
+
+        String path = ctx.path.getText();
+        if (path.startsWith("\"") && path.endsWith("\"")) {
+            path = path.substring(1, path.length() - 1);
+        }
+        node.setPath(path);
+
+        return node;
+    }
+
+
+    @Override
+    public AstNode visitJsonValue(AngularParser.JsonValueContext ctx) {
+        JsonValue node = new JsonValue();
+        node.setJsonDef(visit(ctx.jsonValue));
+        return node;
+    }
+
+    @Override
+    public AstNode visitSimpleValue(AngularParser.SimpleValueContext ctx) {
+        SimpleValue node = new SimpleValue();
+        node.setValueOptions(visit(ctx.simple));
+        return node;
+    }
+
+    @Override
+    public AstNode visitObjectValueValue(AngularParser.ObjectValueValueContext ctx) {
+        ObjectValueValue node = new ObjectValueValue();
+        node.setObjectValue(visit(ctx.objVal));
+        return node;
+    }
+
+    @Override
+    public AstNode visitObjectFunctionValue(AngularParser.ObjectFunctionValueContext ctx) {
+        ObjectFunctionValue node = new ObjectFunctionValue();
+        node.setObjectFunction(visit(ctx.funcCall));
+        return node;
+    }
+
+    @Override
+    public AstNode visitArrayValue(AngularParser.ArrayValueContext ctx) {
+        ArrayValue node = new ArrayValue();
+        node.setArrayValues(visit(ctx.array));
+        return node;
+    }
+
+    @Override
+    public AstNode visitAssertionValueValue(AngularParser.AssertionValueValueContext ctx) {
+        AssertionValueValue node = new AssertionValueValue();
+        node.setAssertionValue(visit(ctx.assertion));
+        return node;
+    }
+
+    @Override
+    public AstNode visitArrowFunctionValue(AngularParser.ArrowFunctionValueContext ctx) {
+        ArrowFunctionValue node = new ArrowFunctionValue();
+        node.setArrowFunction(visit(ctx.arrowFunc));
+        return node;
+    }
+
+    @Override
+    public AstNode visitInterfaceValuesValue(AngularParser.InterfaceValuesValueContext ctx) {
+        InterfaceValuesValue node = new InterfaceValuesValue();
+        node.setInterfaceValues(visit(ctx.ifaceValue));
+        return node;
+    }
+
+    @Override
+    public AstNode visitExpressionValue(AngularParser.ExpressionValueContext ctx) {
+        ExpressionValue node = new ExpressionValue();
+        node.setExpression(visit(ctx.expr));
+        return node;
+    }
+
+    @Override
+    public AstNode visitNullValue(AngularParser.NullValueContext ctx) {
+        return new NullValue();
+    }
+
+    @Override
+    public AstNode visitBracketArrayType(AngularParser.BracketArrayTypeContext ctx) {
+        BracketArrayType node = new BracketArrayType();
+        node.setType(visit(ctx.type));  // Visit the typeOptions rule
+        return node;
+    }
+
+    @Override
+    public AstNode visitGenericArrayType(AngularParser.GenericArrayTypeContext ctx) {
+        GenericArrayType node = new GenericArrayType();
+        node.setType(visit(ctx.type));  // Visit the typeOptions rule
+        return node;
+    }
+
+
+    @Override
+    public AstNode visitSimpleTypeOption(AngularParser.SimpleTypeOptionContext ctx) {
+        SimpleTypeOption node = new SimpleTypeOption();
+        node.setTypeOptions(visit(ctx.simpleType));  // Visit typeOptions
+        return node;
+    }
+
+    @Override
+    public AstNode visitTupleTypeOption(AngularParser.TupleTypeOptionContext ctx) {
+        TupleTypeOption node = new TupleTypeOption();
+        node.setTupleOptions(visit(ctx.tuple));  // Visit tupleOptions
+        return node;
+    }
+
+    @Override
+    public AstNode visitArrayTypeOption(AngularParser.ArrayTypeOptionContext ctx) {
+        ArrayTypeOption node = new ArrayTypeOption();
+        node.setArrayOptions(visit(ctx.array));  // Visit arrayOptions
+        return node;
+    }
+
+
+    @Override
+    public AstNode visitStringValue(AngularParser.StringValueContext ctx) {
+        String text = ctx.str.getText();
+        if (text.length() >= 2 && text.startsWith("\"") && text.endsWith("\"")) {
+            text = text.substring(1, text.length() - 1);
+        }
+        return new StringValue(text);
+    }
+
+    @Override
+    public AstNode visitNumberValue(AngularParser.NumberValueContext ctx) {
+        String numText = ctx.num.getText();
+        try {
+            if (numText.contains(".")) {
+                return new NumberValue(Double.parseDouble(numText));
+            } else {
+                return new NumberValue(Integer.parseInt(numText));
+            }
+        } catch (NumberFormatException e) {
+            return new NumberValue(0);
+        }
+    }
+
+    @Override
+    public AstNode visitBooleanValue(AngularParser.BooleanValueContext ctx) {
+        return new BooleanValue(Boolean.parseBoolean(ctx.bool.getText()));
+    }
+
+    @Override
+    public AstNode visitIdentifierValue(AngularParser.IdentifierValueContext ctx) {
+        return new IdentifierValue(ctx.id.getText());
+    }
+
+
+    @Override
+    public AstNode visitBlockWithBraces(AngularParser.BlockWithBracesContext ctx) {
+        BlockWithBraces block = new BlockWithBraces();
+        block.setStartLine(ctx.start.getLine());
+        block.setEndLine(ctx.stop.getLine());
+
+        ctx.statements.forEach(stmtCtx ->
+                block.addStatement(visit(stmtCtx)));
+
+        return block;
+    }
+
+    @Override
+    public AstNode visitSingleStatementBlock(AngularParser.SingleStatementBlockContext ctx) {
+        SingleStatementBlock block = new SingleStatementBlock();
+        block.setStartLine(ctx.start.getLine());
+        block.setEndLine(ctx.stop.getLine());
+        block.setStatement(visit(ctx.singleStmt));
+        return block;
+    }
+
+
+
+    @Override
+    public AstNode visitAsAssertion(AngularParser.AsAssertionContext ctx) {
+        AsAssertion assertion = new AsAssertion();
+        assertion.setIdentifier(ctx.value.getText());
+        assertion.setType(visit(ctx.type));
+        return assertion;
+    }
+
+    @Override
+    public AstNode visitGenericAssertion(AngularParser.GenericAssertionContext ctx) {
+        GenericAssertion assertion = new GenericAssertion();
+        assertion.setType(visit(ctx.type));
+        assertion.setIdentifier(ctx.value.getText());
+        return assertion;
+    }
+
+
+
+    @Override
+    public AstNode visitServiceStringValue(AngularParser.ServiceStringValueContext ctx) {
+        return new ServiceStringValue(ctx.STRING().getText());
+    }
+
+    @Override
+    public AstNode visitServiceBooleanValue(AngularParser.ServiceBooleanValueContext ctx) {
+        return new ServiceBooleanValue(Boolean.parseBoolean(ctx.BOOLEAN().getText()));
+    }
+
+    @Override
+    public AstNode visitServiceNumberValue(AngularParser.ServiceNumberValueContext ctx) {
+        String numText = ctx.NUMBER().getText();
+        try {
+            return numText.contains(".")
+                    ? new ServiceNumberValue(Double.parseDouble(numText))
+                    : new ServiceNumberValue(Integer.parseInt(numText));
+        } catch (NumberFormatException e) {
+            return new ServiceNumberValue(0);
+        }
+    }
+
+    @Override
+    public AstNode visitServiceIdentifierValue(AngularParser.ServiceIdentifierValueContext ctx) {
+        return new ServiceIdentifierValue(ctx.IDENTIFIER().getText());
+    }
+
+
+
+    @Override
+    public AstNode visitForLoop(AngularParser.ForLoopContext ctx) {
+        ForLoop forLoop = new ForLoop();
+
+        // Handle initialization (variableDeclaration or assignValue)
+        if (ctx.init != null) {
+            forLoop.setInitialization(visit(ctx.init));
+        } else if (ctx.initAssign != null) {
+            forLoop.setInitialization(visit(ctx.initAssign));
+        }
+        // Else: empty initialization (handled by null check in toString)
+
+        // Handle condition
+        if (ctx.condition != null) {
+            forLoop.setCondition(visit(ctx.condition));
+        }
+
+        // Handle update
+        if (ctx.update != null) {
+            forLoop.setUpdate(visit(ctx.update));
+        } else if (ctx.updateOp != null) {
+            forLoop.setUpdate(visit(ctx.updateOp));
+        }
+
+        // Handle body
+        forLoop.setBody(visit(ctx.body));
+
+        return forLoop;
+    }
+
+
+    @Override
+    public AstNode visitIfStatement(AngularParser.IfStatementContext ctx) {
+        IfStatement ifStmt = new IfStatement();
+
+        // Set main condition and block
+        ifStmt.setCondition(visit(ctx.condition));
+        ifStmt.setThenBlock(visit(ctx.thenBlock));
+
+        // Process else-if branches
+        for (int i = 0; i < ctx.elseIfCond.size(); i++) {
+            ifStmt.addElseIfBranch(
+                    visit(ctx.elseIfCond.get(i)),
+                    visit(ctx.elseIfBlock.get(i))
+            );
+        }
+
+        // Process final else block
+        if (ctx.elseBlock != null) {
+            ifStmt.setElseBlock(visit(ctx.elseBlock));
+        }
+
+        return ifStmt;
+    }
+
+
+    @Override
+    public AstNode visitWhileLoop(AngularParser.WhileLoopContext ctx) {
+        WhileLoop whileLoop = new WhileLoop();
+
+        // condition: expression → AstNode
+        whileLoop.setCondition(visit(ctx.condition));
+
+        // body: block → AstNode
+        whileLoop.setBody(visit(ctx.body));
+
+        return whileLoop;
+    }
+
+
+    @Override
+    public AstNode visitDoWhileLoop(AngularParser.DoWhileLoopContext ctx) {
+        DoWhileLoop doWhileLoop = new DoWhileLoop();
+
+        // body: block → AstNode
+        doWhileLoop.setBody(visit(ctx.body));
+
+        // condition: expression → AstNode
+        doWhileLoop.setCondition(visit(ctx.condition));
+
+        return doWhileLoop;
+    }
+
+    @Override
+    public AstNode visitForEachLoop(AngularParser.ForEachLoopContext ctx) {
+        ForEachLoop forEachLoop = new ForEachLoop();
+
+        // declarationType: VAR | LET | CONST
+        forEachLoop.setDeclarationType(ctx.VAR() != null ? "var" :
+                ctx.LET() != null ? "let" : "const");
+
+        // item: IDENTIFIER → String
+        forEachLoop.setItem(ctx.item.getText());
+
+        // iterable: expression → AstNode
+        forEachLoop.setIterable(visit(ctx.iterable));
+
+        // body: block → AstNode
+        forEachLoop.setBody(visit(ctx.body));
+
+        return forEachLoop;
+    }
+
+
+    @Override
+    public AstNode visitClassObjectDeclaration(AngularParser.ClassObjectDeclarationContext ctx) {
+        ClassObjectDeclaration classObjDecl = new ClassObjectDeclaration();
+
+        // declarationType: LET | VAR | CONST
+        if (ctx.LET() != null) {
+            classObjDecl.setDeclarationType("let");
+        } else if (ctx.VAR() != null) {
+            classObjDecl.setDeclarationType("var");
+        } else {
+            classObjDecl.setDeclarationType("const");
+        }
+
+        // name: IDENTIFIER → String
+        classObjDecl.setName(ctx.name.getText());
+
+        // value: classValue → AstNode
+        classObjDecl.setValue(visit(ctx.value));
+
+        return classObjDecl;
+    }
+
+    @Override
+    public AstNode visitEnumVariable(AngularParser.EnumVariableContext ctx) {
+        EnumVariable enumVar = new EnumVariable();
+
+        // name: typeOptions → AstNode
+        enumVar.setName(visit(ctx.name));
+
+        // value: STRING | NUMBER | IDENTIFIER → String
+        if (ctx.value != null) {
+            enumVar.setValue(ctx.value.getText());
+        }
+
+        return enumVar;
+    }
+
+    @Override
+    public AstNode visitEnumDeclaration(AngularParser.EnumDeclarationContext ctx) {
+        EnumDeclaration enumDecl = new EnumDeclaration();
+
+        // name: IDENTIFIER → String
+        enumDecl.setName(ctx.name.getText());
+
+        // values: List<enumVariable>
+        if (ctx.values != null) {
+            for (AngularParser.EnumVariableContext varCtx : ctx.values) {
+                enumDecl.addValue((EnumVariable) visit(varCtx));
+            }
+        }
+
+        return enumDecl;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 }
