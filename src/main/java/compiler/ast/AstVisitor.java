@@ -18,5 +18,18 @@ public interface AstVisitor<T> {
     T visitClassMethodDeclaration(ClassMethodDeclaration node);
     T visitClassFunctionCall(ClassFunctionCall node);
     T visitImportModule(ImportModule node);
+
+    T visitJsonValue(JsonValue node);
+    T visitSimpleValue(SimpleValue node);
+    T visitObjectValueValue(ObjectValueValue node);
+    T visitObjectFunctionValue(ObjectFunctionValue node);
+    T visitArrayValue(ArrayValue node);
+    T visitAssertionValueValue(AssertionValueValue node);
+    T visitArrowFunctionValue(ArrowFunctionValue node);
+    T visitInterfaceValuesValue(InterfaceValuesValue node);
+    T visitExpressionValue(ExpressionValue node);
+    T visitNullValue(NullValue node);
+
+
     // 
 }

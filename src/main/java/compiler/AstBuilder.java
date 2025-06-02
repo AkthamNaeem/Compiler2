@@ -433,4 +433,73 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
 
         return node;
     }
+
+
+    @Override
+    public AstNode visitJsonValue(AngularParser.JsonValueContext ctx) {
+        JsonValue node = new JsonValue();
+        node.setJsonDef(visit(ctx.jsonValue));
+        return node;
+    }
+
+    @Override
+    public AstNode visitSimpleValue(AngularParser.SimpleValueContext ctx) {
+        SimpleValue node = new SimpleValue();
+        node.setValueOptions(visit(ctx.simple));
+        return node;
+    }
+
+    @Override
+    public AstNode visitObjectValueValue(AngularParser.ObjectValueValueContext ctx) {
+        ObjectValueValue node = new ObjectValueValue();
+        node.setObjectValue(visit(ctx.objVal));
+        return node;
+    }
+
+    @Override
+    public AstNode visitObjectFunctionValue(AngularParser.ObjectFunctionValueContext ctx) {
+        ObjectFunctionValue node = new ObjectFunctionValue();
+        node.setObjectFunction(visit(ctx.funcCall));
+        return node;
+    }
+
+    @Override
+    public AstNode visitArrayValue(AngularParser.ArrayValueContext ctx) {
+        ArrayValue node = new ArrayValue();
+        node.setArrayValues(visit(ctx.array));
+        return node;
+    }
+
+    @Override
+    public AstNode visitAssertionValueValue(AngularParser.AssertionValueValueContext ctx) {
+        AssertionValueValue node = new AssertionValueValue();
+        node.setAssertionValue(visit(ctx.assertion));
+        return node;
+    }
+
+    @Override
+    public AstNode visitArrowFunctionValue(AngularParser.ArrowFunctionValueContext ctx) {
+        ArrowFunctionValue node = new ArrowFunctionValue();
+        node.setArrowFunction(visit(ctx.arrowFunc));
+        return node;
+    }
+
+    @Override
+    public AstNode visitInterfaceValuesValue(AngularParser.InterfaceValuesValueContext ctx) {
+        InterfaceValuesValue node = new InterfaceValuesValue();
+        node.setInterfaceValues(visit(ctx.ifaceValue));
+        return node;
+    }
+
+    @Override
+    public AstNode visitExpressionValue(AngularParser.ExpressionValueContext ctx) {
+        ExpressionValue node = new ExpressionValue();
+        node.setExpression(visit(ctx.expr));
+        return node;
+    }
+
+    @Override
+    public AstNode visitNullValue(AngularParser.NullValueContext ctx) {
+        return new NullValue();
+    }
 }
