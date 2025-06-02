@@ -451,6 +451,17 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
 
         return moduleDecl;
     }
+    @Override
+    public AstNode visitImportSpecifier(AngularParser.ImportSpecifierContext ctx) {
+        ImportSpecifier specifier = new ImportSpecifier();
 
+        specifier.setName(ctx.name.getText());
+
+        if (ctx.alias != null) {
+            specifier.setAlias(ctx.alias.getText());
+        }
+
+        return specifier;
+    }
 
 }

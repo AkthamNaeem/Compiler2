@@ -17,4 +17,5 @@ public interface AstVisitor<T> {
     T visitInterfaceDeclaration(InterfaceDeclaration node);
     T visitClassDeclaration(ClassDeclaration node);
     T visitModuleDeclaration(ModuleDeclaration node);
+    T visitImportSpecifier(ImportSpecifier node);
 }
