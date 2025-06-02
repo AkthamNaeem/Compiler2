@@ -516,4 +516,26 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         node.setType(visit(ctx.type));  // Visit the typeOptions rule
         return node;
     }
+
+
+    @Override
+    public AstNode visitSimpleTypeOption(AngularParser.SimpleTypeOptionContext ctx) {
+        SimpleTypeOption node = new SimpleTypeOption();
+        node.setTypeOptions(visit(ctx.simpleType));  // Visit typeOptions
+        return node;
+    }
+
+    @Override
+    public AstNode visitTupleTypeOption(AngularParser.TupleTypeOptionContext ctx) {
+        TupleTypeOption node = new TupleTypeOption();
+        node.setTupleOptions(visit(ctx.tuple));  // Visit tupleOptions
+        return node;
+    }
+
+    @Override
+    public AstNode visitArrayTypeOption(AngularParser.ArrayTypeOptionContext ctx) {
+        ArrayTypeOption node = new ArrayTypeOption();
+        node.setArrayOptions(visit(ctx.array));  // Visit arrayOptions
+        return node;
+    }
 }

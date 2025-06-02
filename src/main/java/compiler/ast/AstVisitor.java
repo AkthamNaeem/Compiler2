@@ -34,6 +34,10 @@ public interface AstVisitor<T> {
     T visitBracketArrayType(BracketArrayType node);
     T visitGenericArrayType(GenericArrayType node);
 
+    T visitSimpleTypeOption(SimpleTypeOption node);
+    T visitTupleTypeOption(TupleTypeOption node);
+    T visitArrayTypeOption(ArrayTypeOption node);
+
 
     // 
 }
