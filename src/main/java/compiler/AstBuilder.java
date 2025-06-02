@@ -1132,11 +1132,9 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
     public AstNode visitStyleDef(AngularParser.StyleDefContext ctx) {
         StyleDef styleDef = new StyleDef();
 
-        // معالجة النصوص الحرفية (إزالة الbackticks إذا كانت موجودة)
         styleDef.setStartLiteral(cleanLiteral(ctx.start));
         styleDef.setEndLiteral(cleanLiteral(ctx.end));
 
-        // معالجة قواعد CSS
         for (AngularParser.CssRuleContext ruleCtx : ctx.cssRule()) {
             styleDef.addCssRule(visit(ruleCtx));
         }
@@ -1144,10 +1142,9 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         return styleDef;
     }
 
-    // دالة مساعدة لتنظيف النصوص الحرفية
     private String cleanLiteral(Token token) {
         String text = token.getText();
-        return text.replaceAll("^`|`$", ""); // إزالة الbackticks من البداية والنهاية
+        return text.replaceAll("^`|`$", "");
     }
 
     @Override
@@ -1179,6 +1176,42 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         property.setValue(visit(ctx.value));
 
         return property;
+    }
+
+    @Override
+    public AstNode visitComponentStringValue(AngularParser.ComponentStringValueContext ctx) {
+        return new ComponentStringValue(ctx.STRING().getText());
+    }
+
+    @Override
+    public AstNode visitComponentBooleanValue(AngularParser.ComponentBooleanValueContext ctx) {
+        return new ComponentBooleanValue(Boolean.parseBoolean(ctx.BOOLEAN().getText()));
+    }
+
+    @Override
+    public AstNode visitComponentNumberValue(AngularParser.ComponentNumberValueContext ctx) {
+        String numText = ctx.NUMBER().getText();
+        return new ComponentNumberValue(
+                numText.contains(".") ? Double.parseDouble(numText) : Integer.parseInt(numText)
+        );
+    }
+
+    @Override
+    public AstNode visitComponentObjectValue(AngularParser.ComponentObjectValueContext ctx) {
+        ComponentObjectValue objValue = new ComponentObjectValue();
+        for (AngularParser.ObjectPropertyContext propCtx : ctx.objectValue().objectProperty()) {
+            objValue.addProperty(propCtx.IDENTIFIER().getText(), visit(propCtx.value()));
+        }
+        return objValue;
+    }
+
+    @Override
+    public AstNode visitComponentArrayValue(AngularParser.ComponentArrayValueContext ctx) {
+        ComponentArrayValue arrayValue = new ComponentArrayValue();
+        for (AngularParser.ArrayElementContext elemCtx : ctx.arrayValues().arrayElement()) {
+            arrayValue.addElement(visit(elemCtx.value()));
+        }
+        return arrayValue;
     }
 
 }
