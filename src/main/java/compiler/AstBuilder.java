@@ -560,17 +560,38 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
     public AstNode visitObjectValue(AngularParser.ObjectValueContext ctx) {
         ObjectValue objectValue = new ObjectValue();
 
-        // معالجة الجزء الاختياري (this/super)
+
         if (ctx.THIS() != null) {
             objectValue.setThis(true);
         } else if (ctx.SUPER() != null) {
             objectValue.setSuper(true);
         }
 
-        // معالجة الكائن والخاصية
         objectValue.setObject(visit(ctx.obj));
         objectValue.setProperty(ctx.prop.getText());
 
         return objectValue;
+    }
+
+    @Override
+    public AstNode visitObjectFunction(AngularParser.ObjectFunctionContext ctx) {
+        ObjectFunctionCall functionCall = new ObjectFunctionCall();
+
+        if (ctx.THIS() != null) {
+            functionCall.setThis(true);
+        } else if (ctx.SUPER() != null) {
+            functionCall.setSuper(true);
+        }
+
+        functionCall.setObject(visit(ctx.obj));
+        functionCall.setMethodName(ctx.method.getText());
+
+        if (ctx.args != null) {
+            for (AngularParser.AllValuesContext argCtx : ctx.args) {
+                functionCall.addArgument(visit(argCtx));
+            }
+        }
+
+        return functionCall;
     }
 }
