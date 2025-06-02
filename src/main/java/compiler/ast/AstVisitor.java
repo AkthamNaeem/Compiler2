@@ -14,5 +14,8 @@ public interface AstVisitor<T> {
 
 
     T visitInterfaceObject(InterfaceObject node);
+    T visitClassVariableDeclaration(ClassVariableDeclaration node);
+    T visitClassMethodDeclaration(ClassMethodDeclaration node);
+    T visitClassFunctionCall(ClassFunctionCall node);
     // 
 }
