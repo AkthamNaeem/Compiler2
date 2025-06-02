@@ -1098,6 +1098,24 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
             throw new CompilationError("Invalid standalone definition: " + e.getMessage(), ctx);
         }
     }
+    @Override
+    public AstNode visitSelectorDef(AngularParser.SelectorDefContext ctx) {
+        if (ctx.selector == null) {
+            throw new CompilationError("Selector value is missing", ctx);
+        }
+
+        return new SelectorDef(ctx.selector.getText());
+    }
+    @Override
+    public AstNode visitTemplateDef(AngularParser.TemplateDefContext ctx) {
+        TemplateDef templateDef = new TemplateDef();
+
+        templateDef.setStartLiteral(ctx.start.getText());
+        templateDef.setContent(visit(ctx.content));
+        templateDef.setEndLiteral(ctx.end.getText());
+
+        return templateDef;
+    }
 
 
 }
