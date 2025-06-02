@@ -594,4 +594,22 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         block.setStatement(visit(ctx.singleStmt));
         return block;
     }
+
+
+
+    @Override
+    public AstNode visitAsAssertion(AngularParser.AsAssertionContext ctx) {
+        AsAssertion assertion = new AsAssertion();
+        assertion.setIdentifier(ctx.value.getText());
+        assertion.setType(visit(ctx.type));
+        return assertion;
+    }
+
+    @Override
+    public AstNode visitGenericAssertion(AngularParser.GenericAssertionContext ctx) {
+        GenericAssertion assertion = new GenericAssertion();
+        assertion.setType(visit(ctx.type));
+        assertion.setIdentifier(ctx.value.getText());
+        return assertion;
+    }
 }

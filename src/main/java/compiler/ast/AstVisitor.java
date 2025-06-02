@@ -47,6 +47,9 @@ public interface AstVisitor<T> {
     T visitBlockWithBraces(BlockWithBraces node);
     T visitSingleStatementBlock(SingleStatementBlock node);
 
+    T visitAsAssertion(AsAssertion node);
+    T visitGenericAssertion(GenericAssertion node);
+
 
     // 
 }
