@@ -1171,5 +1171,14 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         }
         return styleUrlsDef;
     }
+    @Override
+    public AstNode visitComponentProperty(AngularParser.ComponentPropertyContext ctx) {
+        ComponentProperty property = new ComponentProperty();
+
+        property.setName(ctx.name.getText());
+        property.setValue(visit(ctx.value));
+
+        return property;
+    }
 
 }

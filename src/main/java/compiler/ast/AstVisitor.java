@@ -82,4 +82,5 @@ public interface AstVisitor<T> {
     T visitStyleDef(StyleDef node);
     T visitStylesDef(StylesDef node);
     T visitStyleUrlsDef(StyleUrlsDef node);
+    T visitComponentProperty(ComponentProperty node);
 }
