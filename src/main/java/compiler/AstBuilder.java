@@ -1128,6 +1128,26 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         templateUrlDef.setPath(path);
         return templateUrlDef;
     }
+    @Override
+    public AstNode visitStyleDef(AngularParser.StyleDefContext ctx) {
+        StyleDef styleDef = new StyleDef();
 
+        // معالجة النصوص الحرفية (إزالة الbackticks إذا كانت موجودة)
+        styleDef.setStartLiteral(cleanLiteral(ctx.start));
+        styleDef.setEndLiteral(cleanLiteral(ctx.end));
+
+        // معالجة قواعد CSS
+        for (AngularParser.CssRuleContext ruleCtx : ctx.cssRule()) {
+            styleDef.addCssRule(visit(ruleCtx));
+        }
+
+        return styleDef;
+    }
+
+    // دالة مساعدة لتنظيف النصوص الحرفية
+    private String cleanLiteral(Token token) {
+        String text = token.getText();
+        return text.replaceAll("^`|`$", ""); // إزالة الbackticks من البداية والنهاية
+    }
 
 }
