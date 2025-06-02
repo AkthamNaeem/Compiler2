@@ -377,6 +377,7 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         return opNode;
     }
 
+    // arithmetic operatorchain :
     @Override
     public AstNode visitArithmeticOperatorChain(AngularParser.ArithmeticOperatorChainContext ctx) {
         ArithmeticOperatorChain chain = new ArithmeticOperatorChain();
@@ -385,9 +386,14 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
             chain.addOperator(ctx.ops.get(i).getText());
             chain.addValue(visit(ctx.values.get(i)));
         }
-
         return chain;
     }
-
+    // paranethesized operator :
+    @Override
+    public AstNode visitParenthesizedOperator(AngularParser.ParenthesizedOperatorContext ctx) {
+        ParenthesizedOperator node = new ParenthesizedOperator();
+        node.setOperator(visit(ctx.op));
+        return node;
+    }
 
 }
