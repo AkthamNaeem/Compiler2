@@ -36,4 +36,6 @@ public interface AstVisitor<T> {
     T visitInterfaceMethod(InterfaceMethod node);
     T visitClassValue(ClassValue node);
     T visitFunctionCall(FunctionCall node);
+    T visitJsonDef(JsonDef node);
+    T visitJsonProperty(JsonProperty node);
 }

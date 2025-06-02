@@ -670,4 +670,25 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
 
         return functionCall;
     }
+
+    @Override
+    public AstNode visitJsonDef(AngularParser.JsonDefContext ctx) {
+        JsonDef jsonDef = new JsonDef();
+
+        if (ctx.props != null) {
+            for (AngularParser.JsonBodyContext propCtx : ctx.props) {
+                jsonDef.addProperty((JsonProperty) visit(propCtx));
+            }
+        }
+
+        return jsonDef;
+    }
+
+    @Override
+    public AstNode visitJsonBody(AngularParser.JsonBodyContext ctx) {
+        JsonProperty property = new JsonProperty();
+        property.setKey(ctx.key.getText());
+        property.setValue(visit(ctx.value));
+        return property;
+    }
 }
