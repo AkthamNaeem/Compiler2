@@ -59,6 +59,10 @@ public interface AstVisitor<T> {
     T visitServiceNumberValue(ServiceNumberValue node);
     T visitServiceIdentifierValue(ServiceIdentifierValue node);
 
+    T visitForLoop(ForLoop node);
+
+    T visitIfStatement(IfStatement node);
+
 
     // 
 }

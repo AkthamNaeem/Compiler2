@@ -656,4 +656,61 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
     public AstNode visitServiceIdentifierValue(AngularParser.ServiceIdentifierValueContext ctx) {
         return new ServiceIdentifierValue(ctx.IDENTIFIER().getText());
     }
+
+
+
+    @Override
+    public AstNode visitForLoop(AngularParser.ForLoopContext ctx) {
+        ForLoop forLoop = new ForLoop();
+
+        // Handle initialization (variableDeclaration or assignValue)
+        if (ctx.init != null) {
+            forLoop.setInitialization(visit(ctx.init));
+        } else if (ctx.initAssign != null) {
+            forLoop.setInitialization(visit(ctx.initAssign));
+        }
+        // Else: empty initialization (handled by null check in toString)
+
+        // Handle condition
+        if (ctx.condition != null) {
+            forLoop.setCondition(visit(ctx.condition));
+        }
+
+        // Handle update
+        if (ctx.update != null) {
+            forLoop.setUpdate(visit(ctx.update));
+        } else if (ctx.updateOp != null) {
+            forLoop.setUpdate(visit(ctx.updateOp));
+        }
+
+        // Handle body
+        forLoop.setBody(visit(ctx.body));
+
+        return forLoop;
+    }
+
+
+    @Override
+    public AstNode visitIfStatement(AngularParser.IfStatementContext ctx) {
+        IfStatement ifStmt = new IfStatement();
+
+        // Set main condition and block
+        ifStmt.setCondition(visit(ctx.condition));
+        ifStmt.setThenBlock(visit(ctx.thenBlock));
+
+        // Process else-if branches
+        for (int i = 0; i < ctx.elseIfCond.size(); i++) {
+            ifStmt.addElseIfBranch(
+                    visit(ctx.elseIfCond.get(i)),
+                    visit(ctx.elseIfBlock.get(i))
+            );
+        }
+
+        // Process final else block
+        if (ctx.elseBlock != null) {
+            ifStmt.setElseBlock(visit(ctx.elseBlock));
+        }
+
+        return ifStmt;
+    }
 }
