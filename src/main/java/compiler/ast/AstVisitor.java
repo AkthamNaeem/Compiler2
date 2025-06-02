@@ -15,4 +15,5 @@ public interface AstVisitor<T> {
     T visitParenthesizedOperator(ParenthesizedOperator node);
     T visitSimpleOperator(SimpleOperator node);
     T visitInterfaceDeclaration(InterfaceDeclaration node);
+    T visitClassDeclaration(ClassDeclaration node);
 }
