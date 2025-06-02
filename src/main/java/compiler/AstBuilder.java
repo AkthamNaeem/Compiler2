@@ -463,5 +463,27 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
 
         return specifier;
     }
+    @Override
+    public AstNode visitImportsDef(AngularParser.ImportsDefContext ctx) {
+        ImportsDef importsDef = new ImportsDef();
 
+        if (ctx.modules != null) {
+            for (AngularParser.ImportArrayContext moduleCtx : ctx.modules) {
+                importsDef.addModule(visit(moduleCtx));
+            }
+        }
+        return importsDef;
+    }
+    @Override
+    public AstNode visitImportArray(AngularParser.ImportArrayContext ctx) {
+        ImportArray importArray = new ImportArray();
+
+        if (ctx.importItems != null) {
+            for (AngularParser.ImportItemContext itemCtx : ctx.importItems) {
+                importArray.addImportItem(visit(itemCtx));
+            }
+        }
+
+        return importArray;
+    }
 }

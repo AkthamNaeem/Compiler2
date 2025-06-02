@@ -18,4 +18,6 @@ public interface AstVisitor<T> {
     T visitClassDeclaration(ClassDeclaration node);
     T visitModuleDeclaration(ModuleDeclaration node);
     T visitImportSpecifier(ImportSpecifier node);
+    T visitImportsDef(ImportsDef node);
+    T visitImportArray(ImportArray node);
 }
