@@ -21,4 +21,5 @@ public interface AstVisitor<T> {
     T visitImportsDef(ImportsDef node);
     T visitImportArray(ImportArray node);
     T visitImportItem(ImportItem node);
+    T visitTupleOptions(TupleOptions node);
 }

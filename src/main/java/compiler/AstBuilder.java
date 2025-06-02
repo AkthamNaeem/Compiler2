@@ -492,4 +492,16 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         importItem.setModule(ctx.module.getText());
         return importItem;
     }
+    @Override
+    public AstNode visitTupleOptions(AngularParser.TupleOptionsContext ctx) {
+        TupleOptions tupleOptions = new TupleOptions();
+
+        if (ctx.types != null) {
+            for (AngularParser.TypeOptionsContext typeCtx : ctx.types) {
+                tupleOptions.addType(visit(typeCtx));
+            }
+        }
+
+        return tupleOptions;
+    }
 }
