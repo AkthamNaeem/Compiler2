@@ -40,4 +40,5 @@ public interface AstVisitor<T> {
     T visitJsonProperty(JsonProperty node);
     T visitComparisonExpression(ComparisonExpression node);
     T visitAdditiveExpression(AdditiveExpression node);
+    T visitMultiplicativeExpression(MultiplicativeExpression node);
 }

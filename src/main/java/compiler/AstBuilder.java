@@ -729,5 +729,19 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
 
         return expr;
     }
+    @Override
+    public AstNode visitMultiplicativeExpression(AngularParser.MultiplicativeExpressionContext ctx) {
+        MultiplicativeExpression expr = new MultiplicativeExpression();
+
+        expr.setLeftExpr(visit(ctx.leftExpr));
+
+        for (int i = 0; i < ctx.op.size(); i++) {
+            String operator = ctx.op.get(i).getText(); // "*", "/", or "%"
+            AstNode rightExpr = visit(ctx.rightExpr.get(i));
+            expr.addOperation(operator, rightExpr);
+        }
+
+        return expr;
+    }
 
 }
