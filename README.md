@@ -111,15 +111,4 @@ public AstNode visitConstDeclaration(AngularParser.ConstDeclarationContext ctx) 
 
 المولد ASTBuilder
 
-📦 مثال مختصر لبنية الملفات
-bash
-Copy
-Edit
-/src
- └── compiler/
-     ├── ast/
-     │   └── ConstDeclaration.java
-     ├── visitor/
-     │   └── AstVisitor.java
-     └── builder/
-         └── ASTBuilder.java
+
