@@ -6,6 +6,18 @@ import main.java.compiler.ast.Token;
 import main.java.compiler.ast.arithmeticOperation.CompoundAssignmentOperation;
 import main.resources.gen.AngularParser;
 import main.resources.gen.AngularParserBaseVisitor;
+import main.java.compiler.ast.*;
+import main.java.compiler.ast.declarations.*;
+import main.java.compiler.ast.components.*;
+import main.java.compiler.ast.exporessions.*;
+import main.java.compiler.ast.literals.*;
+import main.java.compiler.ast.modifiers.*;
+import main.java.compiler.ast.operator.*;
+import main.java.compiler.ast.style.*;
+import main.java.compiler.ast.templates.*;
+import main.java.compiler.ast.values.*;
+import main.java.compiler.ast.html.*;
+import main.java.compiler.ast.html.directives.*;
 
 public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
     @Override
@@ -1212,6 +1224,236 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
             arrayValue.addElement(visit(elemCtx.value()));
         }
         return arrayValue;
+    }
+
+
+    @Override
+    public AstNode visitHtml(AngularParser.HtmlContext ctx) {
+        HtmlDocument document = new HtmlDocument();
+        List<HtmlElement> elements = new ArrayList<>();
+
+        for (AngularParser.HtmlElementContext elemCtx : ctx.elements) {
+            elements.add((HtmlElement) visit(elemCtx));
+        }
+
+        document.setElements(elements);
+        return document;
+    }
+
+    // Standard HTML Element
+    @Override
+    public AstNode visitStandardHtmlElement(AngularParser.StandardHtmlElementContext ctx) {
+        StandardHtmlElement element = new StandardHtmlElement();
+
+        // Process opening tag
+        element.setOpeningTag((HtmlTag) visit(ctx.tag));
+
+        // Process content (mixed children and expressions)
+        List<HtmlContent> content = new ArrayList<>();
+        for (ParseTree child : ctx.children) {
+            if (child instanceof AngularParser.HtmlElementContext) {
+                HtmlElementContent elemContent = new HtmlElementContent();
+                elemContent.setElement((HtmlElement) visit(child));
+                content.add(elemContent);
+            } else if (child instanceof AngularParser.HtmlExpressionContext) {
+                HtmlExpressionContent exprContent = new HtmlExpressionContent();
+                exprContent.setExpression(visit(child));
+                content.add(exprContent);
+            }
+        }
+        element.setContent(content);
+
+        // Process closing tag
+        element.setClosingTag((HtmlClosingTag) visit(ctx.closing));
+
+        return element;
+    }
+
+    // Self-closing HTML Element
+    @Override
+    public AstNode visitSelfClosingHtmlElement(AngularParser.SelfClosingHtmlElementContext ctx) {
+        SelfClosingHtmlElement element = new SelfClosingHtmlElement();
+        element.setTag((SelfClosingTag) visit(ctx.selfClosing));
+        return element;
+    }
+
+    // HTML Opening Tag
+    @Override
+    public AstNode visitHtmlTag(AngularParser.HtmlTagContext ctx) {
+        HtmlTag tag = new HtmlTag();
+        tag.setTagName(ctx.tagName.getText());
+
+        // Process directives
+        List<HtmlDirective> directives = new ArrayList<>();
+        for (AngularParser.HtmlTemplateTypeContext dirCtx : ctx.directives) {
+            directives.add((HtmlDirective) visit(dirCtx));
+        }
+        tag.setDirectives(directives);
+
+        // Process attributes
+        List<HtmlAttribute> attributes = new ArrayList<>();
+        for (AngularParser.HtmlTagDataContext attrCtx : ctx.attrs) {
+            attributes.add((HtmlAttribute) visit(attrCtx));
+        }
+        tag.setAttributes(attributes);
+
+        return tag;
+    }
+
+    // HTML Closing Tag
+    @Override
+    public AstNode visitClosingHtmlTag(AngularParser.ClosingHtmlTagContext ctx) {
+        HtmlClosingTag closingTag = new HtmlClosingTag();
+        closingTag.setTagName(ctx.tagName.getText());
+        return closingTag;
+    }
+
+    // Self-closing Tag
+    @Override
+    public AstNode visitSelfClosingTag(AngularParser.SelfClosingTagContext ctx) {
+        SelfClosingTag tag = new SelfClosingTag();
+        tag.setTagName(ctx.tagName.getText());
+
+        // Process directives
+        List<HtmlDirective> directives = new ArrayList<>();
+        for (AngularParser.HtmlTemplateTypeContext dirCtx : ctx.directives) {
+            directives.add((HtmlDirective) visit(dirCtx));
+        }
+
+        // Process attributes
+        List<HtmlAttribute> attributes = new ArrayList<>();
+        for (AngularParser.HtmlTagDataContext attrCtx : ctx.attrs) {
+            attributes.add((HtmlAttribute) visit(attrCtx));
+        }
+        tag.setAttributes(attributes);
+
+        return tag;
+    }
+
+    // HTML Attributes
+    @Override
+    public AstNode visitHtmlTagData(AngularParser.HtmlTagDataContext ctx) {
+        HtmlAttribute attribute = new HtmlAttribute();
+        attribute.setName(ctx.getChild(0).getText());
+        attribute.setValue(ctx.STRING().getText().replaceAll("^\"|\"$", ""));
+        return attribute;
+    }
+
+    // Directives
+    @Override
+    public AstNode visitNgIfTemplate(AngularParser.NgIfTemplateContext ctx) {
+        NgIfDirective directive = new NgIfDirective();
+        directive.setCondition(visit(ctx.condition));
+        return directive;
+    }
+
+    @Override
+    public AstNode visitNgForTemplate(AngularParser.NgForTemplateContext ctx) {
+        NgForDirective directive = new NgForDirective();
+        directive.setLoop(visit(ctx.loop));
+        return directive;
+    }
+
+    @Override
+    public AstNode visitEventBindingTemplate(AngularParser.EventBindingTemplateContext ctx) {
+        EventBindingDirective directive = new EventBindingDirective();
+        directive.setEvent(visit(ctx.event));
+        directive.setHandler(visit(ctx.handler));
+        return directive;
+    }
+
+    // HTML Expressions
+    @Override
+    public AstNode visitHtmlExpression(AngularParser.HtmlExpressionContext ctx) {
+        // Assuming simple expressions for now
+        return visit(ctx.expression());
+    }
+
+    @Override
+    public AstNode visitHtmlTemplateType(AngularParser.HtmlTemplateTypeContext ctx) {
+        if (ctx.NG_IF() != null) {
+            NgIfTemplate ngIf = new NgIfTemplate();
+            ngIf.setCondition(visit(ctx.condition));
+            return ngIf;
+        }
+        else if (ctx.NG_FOR() != null) {
+            NgForTemplate ngFor = new NgForTemplate();
+            ngFor.setLoop(visit(ctx.loop));
+            return ngFor;
+        }
+        else if (ctx.LPAREN() != null) {
+            EventBindingTemplate eventBinding = new EventBindingTemplate();
+            eventBinding.setEvent(visit(ctx.event));
+            eventBinding.setHandler(visit(ctx.handler));
+            return eventBinding;
+        }
+        throw new RuntimeException("Unknown HTML template type");
+    }
+
+    @Override
+    public AstNode visitHtmlDataBinding(AngularParser.HtmlDataBindingContext ctx) {
+        HtmlDataBinding binding = new HtmlDataBinding();
+        for (AngularParser.ExpressionContext exprCtx : ctx.expression()) {
+            binding.addExpression(visit(exprCtx));
+        }
+        return binding;
+    }
+
+    @Override
+    public AstNode visitHtmlTagData(AngularParser.HtmlTagDataContext ctx) {
+        HtmlTagData tagData = new HtmlTagData();
+
+        if (ctx.PROPERTY_BINDING() != null) {
+            tagData.setProperty(ctx.PROPERTY_BINDING().getText());
+        } else if (ctx.IDENTIFIER() != null) {
+            tagData.setProperty(ctx.IDENTIFIER().getText());
+        } else if (ctx.CLASS() != null) {
+            tagData.setProperty(ctx.CLASS().getText());
+        }
+
+        tagData.setValue(ctx.STRING().getText());
+        return tagData;
+    }
+    @Override
+    public AstNode visitHtmlExpression(AngularParser.HtmlExpressionContext ctx) {
+        if (ctx instanceof AngularParser.ArabicHtmlExpressionContext) {
+            ArabicHtmlExpression expr = new ArabicHtmlExpression();
+            expr.setValue(ctx.ARABIC().getText());
+            return expr;
+        }
+        else if (ctx instanceof AngularParser.IdentifierHtmlExpressionContext) {
+            IdentifierHtmlExpression expr = new IdentifierHtmlExpression();
+            expr.setIdentifier(ctx.IDENTIFIER().getText());
+            return expr;
+        }
+        else if (ctx instanceof AngularParser.NumberHtmlExpressionContext) {
+            NumberHtmlExpression expr = new NumberHtmlExpression();
+            expr.setNumber(ctx.NUMBER().getText());
+            return expr;
+        }
+        else if (ctx instanceof AngularParser.ParenthesizedHtmlExpressionContext) {
+            ParenthesizedHtmlExpression expr = new ParenthesizedHtmlExpression();
+            AngularParser.ParenthesizedHtmlExpressionContext parenCtx =
+                    (AngularParser.ParenthesizedHtmlExpressionContext) ctx;
+            expr.setExpression((HtmlExpression) visit(parenCtx.expr));
+            return expr;
+        }
+        else if (ctx instanceof AngularParser.AdditionHtmlExpressionContext) {
+            AdditionHtmlExpression expr = new AdditionHtmlExpression();
+            AngularParser.AdditionHtmlExpressionContext addCtx =
+                    (AngularParser.AdditionHtmlExpressionContext) ctx;
+            expr.setLeft((HtmlExpression) visit(addCtx.left));
+            expr.setRight((HtmlExpression) visit(addCtx.right));
+            return expr;
+        }
+        else if (ctx instanceof AngularParser.DataBindingHtmlExpressionContext) {
+            DataBindingHtmlExpression expr = new DataBindingHtmlExpression();
+            AngularParser.DataBindingHtmlExpressionContext bindingCtx =
+                    (AngularParser.DataBindingHtmlExpressionContext) ctx;
+            expr.setDataBinding((HtmlDataBinding) visit(bindingCtx.htmlDataBinding()));
+            return expr;
+        }
+        throw new RuntimeException("Unhandled HTML expression type: " + ctx.getClass().getSimpleName());
     }
 
 }

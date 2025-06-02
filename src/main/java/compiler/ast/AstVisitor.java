@@ -88,4 +88,27 @@ public interface AstVisitor<T> {
     T visitComponentNumberValue(ComponentNumberValue node);
     T visitComponentObjectValue(ComponentObjectValue node);
     T visitComponentArrayValue(ComponentArrayValue node);
+    // HTML Document
+    T visitHtmlDocument(HtmlDocument node);
+
+    // HTML Elements
+    T visitStandardHtmlElement(StandardHtmlElement node);
+    T visitSelfClosingHtmlElement(SelfClosingHtmlElement node);
+
+    // Directives
+    T visitNgIfDirective(NgIfDirective node);
+    T visitNgForDirective(NgForDirective node);
+    T visitNgIfTemplate(NgIfTemplate node);
+    T visitNgForTemplate(NgForTemplate node);
+    T visitEventBindingTemplate(EventBindingTemplate node);
+
+    T visitHtmlDataBinding(HtmlDataBinding node);
+    T visitHtmlTagData(HtmlTagData node);
+    T visitArabicHtmlExpression(ArabicHtmlExpression node);
+    T visitIdentifierHtmlExpression(IdentifierHtmlExpression node);
+    T visitNumberHtmlExpression(NumberHtmlExpression node);
+    T visitParenthesizedHtmlExpression(ParenthesizedHtmlExpression node);
+    T visitAdditionHtmlExpression(AdditionHtmlExpression node);
+    T visitDataBindingHtmlExpression(DataBindingHtmlExpression node);
+
 }
