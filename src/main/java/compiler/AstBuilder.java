@@ -1555,4 +1555,25 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         return kv;
     }
 
+    @Override
+    public AstNode visitServiceDef(AngularParser.ServiceDefContext ctx) {
+        ServiceDef serviceDef = new ServiceDef();
+
+        if (ctx.props != null) {
+            for (AngularParser.ServicePropertyContext propCtx : ctx.props) {
+                serviceDef.addProperty((ServiceProperty) visit(propCtx));
+            }
+        }
+
+        return serviceDef;
+    }
+
+    @Override
+    public AstNode visitServiceProperty(AngularParser.ServicePropertyContext ctx) {
+        ServiceProperty property = new ServiceProperty();
+        property.setName(ctx.name.getText());
+        property.setValue((ServicePropertyValue) visit(ctx.value));
+        return property;
+    }
+
 }

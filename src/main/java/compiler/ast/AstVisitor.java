@@ -120,4 +120,7 @@ public interface AstVisitor<T> {
     T visitColorCssValue(ColorCssValue node);
     T visitCssSelector(CssSelector node);
 
+    //services :
+    T visitServiceDef(ServiceDef node);
+    T visitServiceProperty(ServiceProperty node);
 }
