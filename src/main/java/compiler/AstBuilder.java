@@ -800,6 +800,73 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         AstNode rightExpr = visit(ctx.rightExpr);
         return new NestedAddition(leftAdd, rightExpr);
     }
+    @Override
+    public AstNode visitStringLiteral(AngularParser.StringLiteralContext ctx) {
+        StringLiteral stringLiteral = new StringLiteral();
+
+        // تحديد نوع الاقتباس (عادي أو Template String)
+        String openingQuote = ctx.LITERAL(0).getText();
+        boolean isTemplate = openingQuote.equals("`");
+        stringLiteral.setTemplateLiteral(isTemplate);
+
+        // تجميع المحتوى مع معالجة Escape Sequences
+        StringBuilder contentBuilder = new StringBuilder();
+        for (TerminalNode node : ctx.literalContent()) {
+            contentBuilder.append(processEscapes(node.getText()));
+        }
+
+        stringLiteral.setContent(contentBuilder.toString());
+        return stringLiteral;
+    }
+
+    private String processEscapes(String raw) {
+        return raw.replace("\\n", "\n")
+                .replace("\\t", "\t")
+                .replace("\\\"", "\"")
+                .replace("\\\\", "\\");
+    }
+
+    @Override
+    public AstNode visitTemplateSubstitutionContent(AngularParser.TemplateSubstitutionContentContext ctx) {
+        TemplateSubstitutionContent content = new TemplateSubstitutionContent();
+        content.setExpression(visit(ctx.templateSubstitution()));
+        return content;
+    }
+
+    @Override
+    public AstNode visitIdentifierContent(AngularParser.IdentifierContentContext ctx) {
+        IdentifierContent content = new IdentifierContent();
+        content.setIdentifier(ctx.IDENTIFIER().getText());
+        return content;
+    }
+
+    @Override
+    public AstNode visitArithmeticOperatorContent(AngularParser.ArithmeticOperatorContentContext ctx) {
+        ArithmeticOperatorContent content = new ArithmeticOperatorContent();
+        content.setArithmeticExpression(visit(ctx.arithmeticDeclaration()));
+        return content;
+    }
+
+    @Override
+    public AstNode visitLogicalOperatorContent(AngularParser.LogicalOperatorContentContext ctx) {
+        LogicalOperatorContent content = new LogicalOperatorContent();
+        content.setLogicalExpression(visit(ctx.logicOperations()));
+        return content;
+    }
+
+    @Override
+    public AstNode visitSymbolContent(AngularParser.SymbolContentContext ctx) {
+        SymbolContent content = new SymbolContent();
+        content.setSymbol(ctx.symbols().getText());
+        return content;
+    }
+
+    @Override
+    public AstNode visitNumberContent(AngularParser.NumberContentContext ctx) {
+        NumberContent content = new NumberContent();
+        content.setValue(Double.parseDouble(ctx.NUMBER().getText()));
+        return content;
+    }
 
 
 

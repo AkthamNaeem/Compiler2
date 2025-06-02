@@ -51,4 +51,11 @@ public interface AstVisitor<T> {
     T visitStringConcatenation(StringConcatenation node);
     T visitIdentifierConcatenation(IdentifierConcatenation node);
     T visitNestedAddition(NestedAddition node);
+    T visitStringLiteral(StringLiteral node);
+    T visitTemplateSubstitutionContent(TemplateSubstitutionContent node);
+    T visitIdentifierContent(IdentifierContent node);
+    T visitArithmeticOperatorContent(ArithmeticOperatorContent node);
+    T visitLogicalOperatorContent(LogicalOperatorContent node);
+    T visitSymbolContent(SymbolContent node);
+    T visitNumberContent(NumberContent node);
 }
