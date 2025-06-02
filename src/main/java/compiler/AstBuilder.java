@@ -875,6 +875,21 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         return substitution;
     }
 
+    @Override
+    public AstNode visitPublicModifier(AngularParser.PublicModifierContext ctx) {
+        return new PublicModifier();
+    }
+
+    @Override
+    public AstNode visitPrivateModifier(AngularParser.PrivateModifierContext ctx) {
+        return new PrivateModifier();
+    }
+
+    @Override
+    public AstNode visitProtectedModifier(AngularParser.ProtectedModifierContext ctx) {
+        return new ProtectedModifier();
+    }
+
 
 
 }
