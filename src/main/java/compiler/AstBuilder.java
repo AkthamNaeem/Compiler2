@@ -396,4 +396,14 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         return node;
     }
 
+
+    //SimpleOperator :
+    @Override
+    public AstNode visitSimpleOperator(AngularParser.SimpleOperatorContext ctx) {
+        SimpleOperator node = new SimpleOperator();
+        node.setOperator(visit(ctx.op));
+        return node;
+    }
+
+
 }
