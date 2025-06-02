@@ -64,9 +64,9 @@ block
 ;
 
 arithmeticOperation
-    : id=IDENTIFIER (PLUSPLUS | MINUSMINUS)                             #PostfixUnaryOperation
-    | (PLUSPLUS | MINUSMINUS) id=IDENTIFIER                             #PrefixUnaryOperation
-    | id=IDENTIFIER (PLUS | MINUS | MUL | DIV) ASSIGN expr=expression   #CompoundAssignmentOperation
+    : id=IDENTIFIER op=(PLUSPLUS | MINUSMINUS)                                #PostfixUnaryOperation
+    | op=(PLUSPLUS | MINUSMINUS) id=IDENTIFIER                                #PrefixUnaryOperation
+    | id=IDENTIFIER op=(PLUS | MINUS | MUL | DIV) ASSIGN expr=expression   #CompoundAssignmentOperation
 ;
 
 functionAssignDeclaration: (LET | VAR | CONST) name=IDENTIFIER (COLON type=allOptions)? ASSIGN value=valueFunctionDeclaration;
