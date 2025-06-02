@@ -78,4 +78,5 @@ public interface AstVisitor<T> {
     T visitStandaloneDef(StandaloneDef node);
     T visitSelectorDef(SelectorDef node);
     T visitTemplateDef(TemplateDef node);
+    T visitTemplateUrlDef(TemplateUrlDef node);
 }

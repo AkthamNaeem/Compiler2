@@ -1116,6 +1116,18 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
 
         return templateDef;
     }
+    @Override
+    public AstNode visitTemplateUrlDef(AngularParser.TemplateUrlDefContext ctx) {
+        TemplateUrlDef templateUrlDef = new TemplateUrlDef();
+
+        String path = ctx.path.getText();
+        if (path.startsWith("\"") && path.endsWith("\"")) {
+            path = path.substring(1, path.length() - 1);
+        }
+
+        templateUrlDef.setPath(path);
+        return templateUrlDef;
+    }
 
 
 }
