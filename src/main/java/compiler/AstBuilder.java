@@ -405,5 +405,21 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         return node;
     }
 
+    @Override
+    public AstNode visitInterfaceDeclaration(AngularParser.InterfaceDeclarationContext ctx) {
+        InterfaceDeclaration interfaceDecl = new InterfaceDeclaration();
+
+        interfaceDecl.setName(ctx.name.getText());
+
+
+        if (ctx.members != null) {
+            for (AngularParser.InterfaceObjectContext memberCtx : ctx.members) {
+                interfaceDecl.addMember(visit(memberCtx));
+            }
+        }
+
+        return interfaceDecl;
+    }
+
 
 }
