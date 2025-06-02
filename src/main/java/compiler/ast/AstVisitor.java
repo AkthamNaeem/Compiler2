@@ -8,5 +8,11 @@ public interface AstVisitor<T> {
     T visitStatement (Statement node);
     T visitCompoundAssignmentOperation (CompoundAssignmentOperation node);
 
+
+
+    //
+
+
+    T visitInterfaceObject(InterfaceObject node);
     // 
 }
