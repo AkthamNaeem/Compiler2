@@ -1,6 +1,7 @@
 package main.java.compiler;
 
 import main.java.compiler.ast.AstNode;
+import main.java.compiler.ast.ConstDeclaration;
 import main.java.compiler.ast.Statement;
 import main.java.compiler.ast.Token;
 import main.java.compiler.ast.arithmeticOperation.CompoundAssignmentOperation;
@@ -178,6 +179,19 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
     }
 
     @Override
+    public AstNode visitConstDeclaration (AngularParser.ConstDeclarationContext ctx) {
+        ConstDeclaration constDeclaration = new ConstDeclaration ();
+
+        constDeclaration.setName (ctx.name.getText ());
+        if (ctx.type != null) {
+            constDeclaration.setType (visit (ctx.type));
+        }
+        constDeclaration.setValue (visit (ctx.value));
+
+        return constDeclaration;
+    }
+
+    @Override
     public AstNode visitPostfixUnaryOperation (AngularParser.PostfixUnaryOperationContext ctx) {
         return super.visitPostfixUnaryOperation (ctx);
     }
@@ -197,7 +211,6 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         compoundAssignmentOperation.setOperator (operator);
         compoundAssignmentOperation.setExpression (expression);
         return compoundAssignmentOperation;
-
     }
 
     @Override

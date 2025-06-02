@@ -7,4 +7,6 @@ public interface AstVisitor<T> {
     T visitConstDeclaration (ConstDeclaration node);
     T visitStatement (Statement node);
     T visitCompoundAssignmentOperation (CompoundAssignmentOperation node);
+
+    // 
 }
