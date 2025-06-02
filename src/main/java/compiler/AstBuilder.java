@@ -637,4 +637,18 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         method.setMethod(visit(ctx.method));
         return method;
     }
+    @Override
+    public AstNode visitClassValue(AngularParser.ClassValueContext ctx) {
+        ClassValue classValue = new ClassValue();
+
+        classValue.setClassName(ctx.className.getText());
+
+        if (ctx.args != null) {
+            for (AngularParser.AllValuesContext argCtx : ctx.args) {
+                classValue.addArgument(visit(argCtx));
+            }
+        }
+
+        return classValue;
+    }
 }
