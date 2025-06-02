@@ -3,6 +3,7 @@ package main.java.compiler.ast;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class BaseFunctionDeclaration implements AstNode {
     private String name;
     private List<AstNode> accessModifiers = new ArrayList<>();
@@ -54,6 +55,18 @@ public class BaseFunctionDeclaration implements AstNode {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
+        if (name != null) sb.append(name);
+        sb.append("(");
+        for (int i = 0; i < params.size(); i++) {
+            sb.append(params.get(i).toString());
+            if (i < params.size() - 1) sb.append(", ");
+        }
+        sb.append(")");
+        if (returnType != null) sb.append(" : ").append(returnType.toString());
+        sb.append(" ").append(body.toString());
+        return sb.toString();
+
+
         if (name != null) {
             sb.append(name);
         }
@@ -82,6 +95,12 @@ public class BaseFunctionDeclaration implements AstNode {
         sb.append("\n}");
 
         return sb.toString();
+    }
+
+    @Override
+    public <T> T accept(AstVisitor<T> visitor) {
+        return visitor.visitBaseFunctionDeclaration(this);
+
     }
 
     @Override

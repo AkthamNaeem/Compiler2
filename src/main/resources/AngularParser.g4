@@ -78,13 +78,14 @@ functionVariable: name=IDENTIFIER (COLON type=allOptions)? (ASSIGN value=allValu
 functionDeclaration: FUNCTION returnType=typeOptions func=baseFunctionDeclaration;
 functionDeclarationWithinClass: FUNCTION? returnType=typeOptions func=baseFunctionDeclaration;
 baseFunctionDeclaration: name=IDENTIFIER? LPAREN (params+=accessModifiers? functionVariable (COMMA params+=accessModifiers? functionVariable)*)? RPAREN (COLON returnType=allOptions)? body=functionBody;
+valueFunctionDeclaration: FUNCTION func=baseFunctionDeclaration;
+
 functionBody:
     LBRACE
     ( statements+=statement )*
     RBRACE
 ;
 arrowFunction: LPAREN (params+=functionVariable (COMMA params+=functionVariable)*)? RPAREN (COLON returnType=allOptions)? ASSIGN GT (body=allValues | bodyExpr=expression);
-valueFunctionDeclaration: FUNCTION func=baseFunctionDeclaration;
 //returnDeclaration: RETURN (value=allValues | op=operatorDeclaration) SEMI;
 
 returnDeclaration
