@@ -383,6 +383,7 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
 
 
 
+
     //
 
 
@@ -412,6 +413,24 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
     public AstNode visitClassFunctionCall(AngularParser.ClassFunctionCallContext ctx) {
         ClassFunctionCall node = new ClassFunctionCall();
         node.setFunctionCall(visit(ctx.call));  // زيارة functionCall
+        return node;
+    }
+
+
+    @Override
+    public AstNode visitImportModule(AngularParser.ImportModuleContext ctx) {
+        ImportModule node = new ImportModule();
+
+        for (AngularParser.ImportSpecifierContext importCtx : ctx.imports) {
+            node.addImport(visit(importCtx));
+        }
+
+        String path = ctx.path.getText();
+        if (path.startsWith("\"") && path.endsWith("\"")) {
+            path = path.substring(1, path.length() - 1);
+        }
+        node.setPath(path);
+
         return node;
     }
 }
