@@ -11,4 +11,5 @@ public interface AstVisitor<T> {
 
     ///
     T visitLogicalOperator(LogicalOperator node);
+    T visitArithmeticOperatorChain(ArithmeticOperatorChain node);
 }

@@ -377,5 +377,17 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         return opNode;
     }
 
+    @Override
+    public AstNode visitArithmeticOperatorChain(AngularParser.ArithmeticOperatorChainContext ctx) {
+        ArithmeticOperatorChain chain = new ArithmeticOperatorChain();
+        chain.setLeftOp(visit(ctx.leftOp));
+        for (int i = 0; i < ctx.ops.size(); i++) {
+            chain.addOperator(ctx.ops.get(i).getText());
+            chain.addValue(visit(ctx.values.get(i)));
+        }
+
+        return chain;
+    }
+
 
 }
