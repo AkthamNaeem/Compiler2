@@ -62,7 +62,9 @@ public interface AstVisitor<T> {
     T visitForLoop(ForLoop node);
 
     T visitIfStatement(IfStatement node);
-
+    T visitWhileLoop(WhileLoop node);
+    T visitDoWhileLoop(DoWhileLoop node);
+    T visitForEachLoop(ForEachLoop node);
 
     // 
 }

@@ -713,4 +713,52 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
 
         return ifStmt;
     }
+
+
+    @Override
+    public AstNode visitWhileLoop(AngularParser.WhileLoopContext ctx) {
+        WhileLoop whileLoop = new WhileLoop();
+
+        // condition: expression → AstNode
+        whileLoop.setCondition(visit(ctx.condition));
+
+        // body: block → AstNode
+        whileLoop.setBody(visit(ctx.body));
+
+        return whileLoop;
+    }
+
+
+    @Override
+    public AstNode visitDoWhileLoop(AngularParser.DoWhileLoopContext ctx) {
+        DoWhileLoop doWhileLoop = new DoWhileLoop();
+
+        // body: block → AstNode
+        doWhileLoop.setBody(visit(ctx.body));
+
+        // condition: expression → AstNode
+        doWhileLoop.setCondition(visit(ctx.condition));
+
+        return doWhileLoop;
+    }
+
+    @Override
+    public AstNode visitForEachLoop(AngularParser.ForEachLoopContext ctx) {
+        ForEachLoop forEachLoop = new ForEachLoop();
+
+        // declarationType: VAR | LET | CONST
+        forEachLoop.setDeclarationType(ctx.VAR() != null ? "var" :
+                ctx.LET() != null ? "let" : "const");
+
+        // item: IDENTIFIER → String
+        forEachLoop.setItem(ctx.item.getText());
+
+        // iterable: expression → AstNode
+        forEachLoop.setIterable(visit(ctx.iterable));
+
+        // body: block → AstNode
+        forEachLoop.setBody(visit(ctx.body));
+
+        return forEachLoop;
+    }
 }
