@@ -622,4 +622,19 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
 
         return interfaceValues;
     }
+
+    @Override
+    public AstNode visitInterfaceProperty(AngularParser.InterfacePropertyContext ctx) {
+        InterfaceProperty property = new InterfaceProperty();
+        property.setName(ctx.name.getText());
+        property.setValue(visit(ctx.value));
+        return property;
+    }
+
+    @Override
+    public AstNode visitInterfaceMethod(AngularParser.InterfaceMethodContext ctx) {
+        InterfaceMethod method = new InterfaceMethod();
+        method.setMethod(visit(ctx.method));
+        return method;
+    }
 }
