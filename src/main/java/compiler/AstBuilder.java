@@ -715,5 +715,19 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
 
         return expr;
     }
+    @Override
+    public AstNode visitAdditiveExpression(AngularParser.AdditiveExpressionContext ctx) {
+        AdditiveExpression expr = new AdditiveExpression();
+
+        expr.setLeftExpr(visit(ctx.leftExpr));
+
+        for (int i = 0; i < ctx.op.size(); i++) {
+            String operator = ctx.op.get(i).getText(); // "+" or "-"
+            AstNode rightExpr = visit(ctx.rightExpr.get(i));
+            expr.addOperation(operator, rightExpr);
+        }
+
+        return expr;
+    }
 
 }
