@@ -1414,6 +1414,7 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         tagData.setValue(ctx.STRING().getText());
         return tagData;
     }
+
     @Override
     public AstNode visitHtmlExpression(AngularParser.HtmlExpressionContext ctx) {
         if (ctx instanceof AngularParser.ArabicHtmlExpressionContext) {
@@ -1454,6 +1455,70 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
             return expr;
         }
         throw new RuntimeException("Unhandled HTML expression type: " + ctx.getClass().getSimpleName());
+    }
+
+
+    @Override
+    public AstNode visitCssRule(AngularParser.CssRuleContext ctx) {
+        CssRule rule = new CssRule();
+        rule.setSelector(visit(ctx.cssSelector()));
+
+        for (AngularParser.CssKeyValueContext kvCtx : ctx.cssKeyValue()) {
+            rule.addProperty((CssKeyValue) visit(kvCtx));
+        }
+
+        return rule;
+    }
+
+    @Override
+    public AstNode visitCssKey(AngularParser.CssKeyContext ctx) {
+        CssKey key = new CssKey();
+        key.setBase(ctx.IDENTIFIER().getText());
+        for (TerminalNode node : ctx.MINUS() + ctx.IDENTIFIER() + ctx.NUMBER() + ctx.TYPE()) {
+            key.addPart(node.getText());
+        }
+
+        return key;
+    }
+
+    @Override
+    public AstNode visitCssKeyValue(AngularParser.CssKeyValueContext ctx) {
+        CssKeyValue kv = new CssKeyValue();
+        kv.setKey((CssKey) visit(ctx.cssKey()));
+        kv.setValue(visit(ctx.cssValue())); // افترضنا وجود قاعدة cssValue
+        return kv;
+    }
+
+    @Override
+    public AstNode visitNumericCssValue(AngularParser.NumericCssValueContext ctx) {
+        NumericCssValue value = new NumericCssValue();
+        value.setNumber(ctx.NUMBER().getText());
+
+        if (ctx.IDENTIFIER() != null) {
+            value.setUnit(ctx.IDENTIFIER().getText());
+        } else if (ctx.MOD() != null) {
+            value.setUnit(ctx.MOD().getText());
+        }
+
+        return value;
+    }
+
+    @Override
+    public AstNode visitIdentifierCssValue(AngularParser.IdentifierCssValueContext ctx) {
+        IdentifierCssValue value = new IdentifierCssValue();
+        value.setIdentifier(ctx.IDENTIFIER().getText());
+        return value;
+    }
+
+    @Override
+    public AstNode visitColorCssValue(AngularParser.ColorCssValueContext ctx) {
+        ColorCssValue value = new ColorCssValue();
+        value.setColorValue(
+                ctx.IDENTIFIER() != null ?
+                        ctx.IDENTIFIER().getText() :
+                        ctx.NUMBER().getText()
+        );
+        return value;
     }
 
 }

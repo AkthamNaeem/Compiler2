@@ -111,4 +111,12 @@ public interface AstVisitor<T> {
     T visitAdditionHtmlExpression(AdditionHtmlExpression node);
     T visitDataBindingHtmlExpression(DataBindingHtmlExpression node);
 
+    // css :
+    T visitCssRule(CssRule node);
+    T visitCssKey(CssKey node);
+    T visitCssKeyValue(CssKeyValue node);
+    T visitNumericCssValue(NumericCssValue node);
+    T visitIdentifierCssValue(IdentifierCssValue node);
+    T visitColorCssValue(ColorCssValue node);
+
 }
