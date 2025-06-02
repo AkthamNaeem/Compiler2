@@ -80,4 +80,6 @@ public interface AstVisitor<T> {
     T visitTemplateDef(TemplateDef node);
     T visitTemplateUrlDef(TemplateUrlDef node);
     T visitStyleDef(StyleDef node);
+    T visitStylesDef(StylesDef node);
+    T visitStyleUrlsDef(StyleUrlsDef node);
 }

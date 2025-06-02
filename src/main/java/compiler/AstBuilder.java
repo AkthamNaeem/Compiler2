@@ -1150,4 +1150,26 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         return text.replaceAll("^`|`$", ""); // إزالة الbackticks من البداية والنهاية
     }
 
+    @Override
+    public AstNode visitStylesDef(AngularParser.StylesDefContext ctx) {
+        StylesDef stylesDef = new StylesDef();
+        if (ctx.styleDefs != null) {
+            for (AngularParser.StyleDefContext styleCtx : ctx.styleDefs) {
+                stylesDef.addStyleDef((StyleDef) visit(styleCtx));
+            }
+        }
+        return stylesDef;
+    }
+
+    @Override
+    public AstNode visitStyleUrlsDef(AngularParser.StyleUrlsDefContext ctx) {
+        StyleUrlsDef styleUrlsDef = new StyleUrlsDef();
+        if (ctx.urls != null) {
+            for (Token urlToken : ctx.urls) {
+                styleUrlsDef.addUrl(urlToken.getText());
+            }
+        }
+        return styleUrlsDef;
+    }
+
 }
