@@ -687,8 +687,33 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
     @Override
     public AstNode visitJsonBody(AngularParser.JsonBodyContext ctx) {
         JsonProperty property = new JsonProperty();
-        property.setKey(ctx.key.getText());
-        property.setValue(visit(ctx.value));
+
+        String rawKey = ctx.key.getText();
+        property.setKey(rawKey.startsWith("\"") ?
+                rawKey.substring(1, rawKey.length() - 1) :
+                rawKey);
+
+        if (ctx.value != null) {
+            property.setValue(visit(ctx.value));
+        }
+
         return property;
     }
+    @Override
+    public AstNode visitComparisonExpression(AngularParser.ComparisonExpressionContext ctx) {
+        ComparisonExpression expr = new ComparisonExpression();
+
+        expr.setLeftOperand(visit(ctx.leftExpr));
+
+        for (int i = 0; i < ctx.op.size(); i++) {
+            Token operatorToken = ctx.op.get(i);
+            ComparisonOperator operator = ComparisonOperator.fromToken(operatorToken.getText());
+            AstNode rightOperand = visit(ctx.rightExpr.get(i));
+
+            expr.addOperation(new ComparisonOperation(operator, rightOperand));
+        }
+
+        return expr;
+    }
+
 }

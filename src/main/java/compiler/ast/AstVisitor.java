@@ -38,4 +38,5 @@ public interface AstVisitor<T> {
     T visitFunctionCall(FunctionCall node);
     T visitJsonDef(JsonDef node);
     T visitJsonProperty(JsonProperty node);
+    T visitComparisonExpression(ComparisonExpression node);
 }
