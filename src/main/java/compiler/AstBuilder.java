@@ -529,13 +529,30 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
     @Override
     public AstNode visitArrayValues(AngularParser.ArrayValuesContext ctx) {
         ArrayValues arrayValues = new ArrayValues();
-
         if (ctx.values != null) {
             for (AngularParser.AllValuesContext valueCtx : ctx.values) {
                 arrayValues.addValue(visit(valueCtx));
             }
         }
-
         return arrayValues;
+    }
+
+    @Override
+    public AstNode visitObject(AngularParser.ObjectContext ctx) {
+        ObjectNode objectNode = new ObjectNode();
+
+        objectNode.setParentheses(ctx.LPAREN() != null);
+
+        if (ctx.id != null) {
+            objectNode.setIdentifier(ctx.id.getText());
+        } else if (ctx.assertion != null) {
+            objectNode.setAssertion(visit(ctx.assertion));
+        } else if (ctx.THIS() != null) {
+            objectNode.setThis(true);
+        } else if (ctx.SUPER() != null) {
+            objectNode.setSuper(true);
+        }
+
+        return objectNode;
     }
 }
