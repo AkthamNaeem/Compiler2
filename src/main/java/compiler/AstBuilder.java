@@ -1575,5 +1575,27 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         property.setValue((ServicePropertyValue) visit(ctx.value));
         return property;
     }
+    @Override
+    public AstNode visitArrowFunction(AngularParser.ArrowFunctionContext ctx) {
+        ArrowFunction arrowFunction = new ArrowFunction();
+
+        if (ctx.params != null) {
+            for (AngularParser.FunctionVariableContext paramCtx : ctx.params) {
+                arrowFunction.addParameter((FunctionVariable) visit(paramCtx));
+            }
+        }
+
+        if (ctx.returnType != null) {
+            arrowFunction.setReturnType(visit(ctx.returnType));
+        }
+
+        if (ctx.body != null) {
+            arrowFunction.setBody(visit(ctx.body), false);
+        } else if (ctx.bodyExpr != null) {
+            arrowFunction.setBody(visit(ctx.bodyExpr), true);
+        }
+
+        return arrowFunction;
+    }
 
 }
