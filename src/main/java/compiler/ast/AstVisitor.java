@@ -124,4 +124,8 @@ public interface AstVisitor<T> {
     T visitServiceDef(ServiceDef node);
     T visitServiceProperty(ServiceProperty node);
     T visitArrowFunction(ArrowFunction node);
+
+    T visitParameter(Parameter node);
+    T visitBaseFunctionDeclaration(BaseFunctionDeclaration node);
+    T visitValueFunctionDeclaration(ValueFunctionDeclaration node);
 }

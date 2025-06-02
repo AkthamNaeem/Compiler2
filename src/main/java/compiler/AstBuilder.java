@@ -1597,5 +1597,42 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
 
         return arrowFunction;
     }
+    @Override
+    public AstNode visitBaseFunctionDeclaration(AngularParser.BaseFunctionDeclarationContext ctx) {
+        BaseFunctionDeclaration node = new BaseFunctionDeclaration();
+
+        // اسم الدالة (اختياري)
+        if (ctx.name != null) {
+            node.setName(ctx.name.getText());
+        }
+
+        // المعاملات
+        if (ctx.params != null) {
+            for (AngularParser.FunctionVariableContext paramCtx : ctx.functionVariable()) {
+                Parameter param = new Parameter();
+
+                // ننشئ Parameter لكل functionVariable مع accessModifier إذا وجد
+                // (يحتاج إلى تعديل بناءً على تركيب functionVariable و accessModifiers في القواعد الأخرى)
+                param.setVariable(visit(paramCtx));
+                node.addParam(param);
+            }
+        }
+
+        // نوع الإرجاع
+        if (ctx.returnType != null) {
+            node.setReturnType(visit(ctx.returnType));
+        }
+
+        // جسم الدالة
+        node.setBody(visit(ctx.body));
+
+        return node;
+    }
+    @Override
+    public AstNode visitValueFunctionDeclaration(AngularParser.ValueFunctionDeclarationContext ctx) {
+        ValueFunctionDeclaration node = new ValueFunctionDeclaration();
+        node.setFunction((BaseFunctionDeclaration) visit(ctx.func));
+        return node;
+    }
 
 }
