@@ -26,4 +26,5 @@ public interface AstVisitor<T> {
     T visitStringType(StringType node);
     T visitBooleanType(BooleanType node);
     T visitCustomType(CustomType node);
+    T visitArrayValues(ArrayValues node);
 }
