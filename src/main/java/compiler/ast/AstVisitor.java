@@ -22,4 +22,8 @@ public interface AstVisitor<T> {
     T visitImportArray(ImportArray node);
     T visitImportItem(ImportItem node);
     T visitTupleOptions(TupleOptions node);
+    T visitNumberType(NumberType node);
+    T visitStringType(StringType node);
+    T visitBooleanType(BooleanType node);
+    T visitCustomType(CustomType node);
 }

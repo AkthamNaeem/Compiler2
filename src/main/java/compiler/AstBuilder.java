@@ -504,4 +504,26 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
 
         return tupleOptions;
     }
+
+    @Override
+    public AstNode visitNumberType(AngularParser.NumberTypeContext ctx) {
+        return new NumberType();
+    }
+
+    @Override
+    public AstNode visitStringType(AngularParser.StringTypeContext ctx) {
+        return new StringType();
+    }
+
+    @Override
+    public AstNode visitBooleanType(AngularParser.BooleanTypeContext ctx) {
+        return new BooleanType();
+    }
+
+    @Override
+    public AstNode visitCustomType(AngularParser.CustomTypeContext ctx) {
+        CustomType customType = new CustomType();
+        customType.setName(ctx.name.getText());
+        return customType;
+    }
 }
