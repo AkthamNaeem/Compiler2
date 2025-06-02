@@ -486,4 +486,10 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
 
         return importArray;
     }
+    @Override
+    public AstNode visitImportItem(AngularParser.ImportItemContext ctx) {
+        ImportItem importItem = new ImportItem();
+        importItem.setModule(ctx.module.getText());
+        return importItem;
+    }
 }

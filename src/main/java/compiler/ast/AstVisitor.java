@@ -20,4 +20,5 @@ public interface AstVisitor<T> {
     T visitImportSpecifier(ImportSpecifier node);
     T visitImportsDef(ImportsDef node);
     T visitImportArray(ImportArray node);
+    T visitImportItem(ImportItem node);
 }
