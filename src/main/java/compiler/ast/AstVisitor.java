@@ -58,4 +58,5 @@ public interface AstVisitor<T> {
     T visitLogicalOperatorContent(LogicalOperatorContent node);
     T visitSymbolContent(SymbolContent node);
     T visitNumberContent(NumberContent node);
+    T visitTemplateSubstitution(TemplateSubstitution node);
 }

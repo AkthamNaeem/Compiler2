@@ -868,6 +868,13 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         return content;
     }
 
+    @Override
+    public AstNode visitTemplateSubstitution(AngularParser.TemplateSubstitutionContext ctx) {
+        TemplateSubstitution substitution = new TemplateSubstitution();
+        substitution.setExpression(visit(ctx.expr)); // معالجة التعبير الداخلي
+        return substitution;
+    }
+
 
 
 }
