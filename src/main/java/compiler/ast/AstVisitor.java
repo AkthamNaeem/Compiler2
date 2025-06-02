@@ -128,4 +128,14 @@ public interface AstVisitor<T> {
     T visitParameter(Parameter node);
     T visitBaseFunctionDeclaration(BaseFunctionDeclaration node);
     T visitValueFunctionDeclaration(ValueFunctionDeclaration node);
+
+
+
+    T visitStringLiteralExpression(StringLiteralExpression expr);
+    T visitStringExpression(StringExpression expr);
+    T visitIdentifierExpression(IdentifierExpression expr);
+    T visitParenthesizedExpression(ParenthesizedExpression expr);
+    T visitArithmeticExpression(ArithmeticExpression expr);
+    T visitObjectValueExpression(ObjectValueExpression expr);
+    T visitArrayValueExpression(ArrayValueExpression expr);
 }

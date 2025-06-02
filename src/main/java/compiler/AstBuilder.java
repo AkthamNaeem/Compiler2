@@ -1635,4 +1635,68 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         return node;
     }
 
+
+
+
+
+
+    @Override
+    public Expression visitStringLiteralExpression(AngularParser.StringLiteralExpressionContext ctx) {
+        return new StringLiteralExpression(ctx.strLit.getText());
+    }
+
+    @Override
+    public Expression visitStringExpression(AngularParser.StringExpressionContext ctx) {
+        return new StringExpression(ctx.str.getText());
+    }
+
+    @Override
+    public Expression visitIdentifierExpression(AngularParser.IdentifierExpressionContext ctx) {
+        return new IdentifierExpression(ctx.id.getText());
+    }
+
+    @Override
+    public Expression visitParenthesizedExpression(AngularParser.ParenthesizedExpressionContext ctx) {
+        return new ParenthesizedExpression((Expression) visit(ctx.expr));
+    }
+
+
+
+    @Override
+    public Expression visitComparisonExpressionExpression(AngularParser.ComparisonExpressionExpressionContext ctx) {
+        Expression left = (Expression) visit(ctx.cmpExpr.left);
+        Expression right = (Expression) visit(ctx.cmpExpr.right);
+        String operator = ctx.cmpExpr.op.getText();
+        return new ComparisonExpression(left, operator, right);
+    }
+
+    // ArithmeticExpression
+    @Override
+    public Expression visitArithmeticExpression(AngularParser.ArithmeticExpressionContext ctx) {
+        Expression left = (Expression) visit(ctx.arithOp.left);
+        Expression right = (Expression) visit(ctx.arithOp.right);
+        String operator = ctx.arithOp.op.getText();
+        return new ArithmeticExpression(left, operator, right);
+    }
+
+    // ObjectValueExpression
+    @Override
+    public Expression visitObjectValueExpression(AngularParser.ObjectValueExpressionContext ctx) {
+        ObjectValueExpression obj = new ObjectValueExpression();
+        ctx.objVal.properties.forEach(p ->
+                obj.addProperty(p.key.getText(), (Expression) visit(p.value))
+        );
+        return obj;
+    }
+
+    // ArrayValueExpression
+    @Override
+    public Expression visitArrayValueExpression(AngularParser.ArrayValueExpressionContext ctx) {
+        ArrayValueExpression arr = new ArrayValueExpression();
+        ctx.arrVal.elements.forEach(e ->
+                arr.addElement((Expression) visit(e))
+        );
+        return arr;
+    }
+
 }
