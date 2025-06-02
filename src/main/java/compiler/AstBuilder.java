@@ -784,4 +784,36 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
 
         return classObjDecl;
     }
+
+    @Override
+    public AstNode visitEnumVariable(AngularParser.EnumVariableContext ctx) {
+        EnumVariable enumVar = new EnumVariable();
+
+        // name: typeOptions → AstNode
+        enumVar.setName(visit(ctx.name));
+
+        // value: STRING | NUMBER | IDENTIFIER → String
+        if (ctx.value != null) {
+            enumVar.setValue(ctx.value.getText());
+        }
+
+        return enumVar;
+    }
+
+    @Override
+    public AstNode visitEnumDeclaration(AngularParser.EnumDeclarationContext ctx) {
+        EnumDeclaration enumDecl = new EnumDeclaration();
+
+        // name: IDENTIFIER → String
+        enumDecl.setName(ctx.name.getText());
+
+        // values: List<enumVariable>
+        if (ctx.values != null) {
+            for (AngularParser.EnumVariableContext varCtx : ctx.values) {
+                enumDecl.addValue((EnumVariable) visit(varCtx));
+            }
+        }
+
+        return enumDecl;
+    }
 }

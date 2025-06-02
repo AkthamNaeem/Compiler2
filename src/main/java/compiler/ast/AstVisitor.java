@@ -68,5 +68,8 @@ public interface AstVisitor<T> {
 
     T visitClassObjectDeclaration(ClassObjectDeclaration node);
 
+    T visitEnumDeclaration(EnumDeclaration node);
+    T visitEnumVariable(EnumVariable node);
+
     // 
 }
