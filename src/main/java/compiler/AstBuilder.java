@@ -438,6 +438,19 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
 
         return classDecl;
     }
+    @Override
+    public AstNode visitModuleDeclaration(AngularParser.ModuleDeclarationContext ctx) {
+        ModuleDeclaration moduleDecl = new ModuleDeclaration();
+
+        if (ctx.cls != null) {
+            moduleDecl.setExportedDeclaration(visit(ctx.cls));
+        }
+        else if (ctx.iface != null) {
+            moduleDecl.setExportedDeclaration(visit(ctx.iface));
+        }
+
+        return moduleDecl;
+    }
 
 
 }
