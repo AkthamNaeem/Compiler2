@@ -367,4 +367,15 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         token.setName (operator);
         return token;
     }
+
+    @Override
+    public AstNode visitLogicalOperator(AngularParser.LogicalOperatorContext ctx) {
+        LogicalOperator opNode = new LogicalOperator();
+        opNode.setLeftOp(visit(ctx.leftOp));
+        opNode.setOperator(ctx.op.getText());
+        opNode.setRightOp(visit(ctx.rightOp));
+        return opNode;
+    }
+
+
 }
