@@ -1085,5 +1085,19 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         return null;
     }
 
+    @Override
+    public AstNode visitStandaloneDef(AngularParser.StandaloneDefContext ctx) {
+        try {
+            if (ctx.value == null) {
+                throw new CompilationError("Missing boolean value for standalone", ctx);
+            }
+
+            boolean value = Boolean.parseBoolean(ctx.value.getText());
+            return new StandaloneDef(value);
+        } catch (Exception e) {
+            throw new CompilationError("Invalid standalone definition: " + e.getMessage(), ctx);
+        }
+    }
+
 
 }

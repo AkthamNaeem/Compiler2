@@ -75,5 +75,5 @@ public interface AstVisitor<T> {
     T visitStylesProperty(StylesProperty node);
     T visitStylesUrlProperty(StylesUrlProperty node);
     T visitCustomProperty(CustomProperty node);
-
+    T visitStandaloneDef(StandaloneDef node);
 }
