@@ -39,5 +39,11 @@ public interface AstVisitor<T> {
     T visitArrayTypeOption(ArrayTypeOption node);
 
 
+    T visitStringValue(StringValue node);
+    T visitNumberValue(NumberValue node);
+    T visitBooleanValue(BooleanValue node);
+    T visitIdentifierValue(IdentifierValue node);
+
+
     // 
 }

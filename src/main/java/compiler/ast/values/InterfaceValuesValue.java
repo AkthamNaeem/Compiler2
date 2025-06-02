@@ -1,4 +1,4 @@
-package main.java.compiler.ast.allValues;
+package main.java.compiler.ast.values;
 
 import main.java.compiler.ast.AstNode;
 import main.java.compiler.ast.AstVisitor;

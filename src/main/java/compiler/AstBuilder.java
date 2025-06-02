@@ -538,4 +538,38 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         node.setArrayOptions(visit(ctx.array));  // Visit arrayOptions
         return node;
     }
+
+
+    @Override
+    public AstNode visitStringValue(AngularParser.StringValueContext ctx) {
+        String text = ctx.str.getText();
+        if (text.length() >= 2 && text.startsWith("\"") && text.endsWith("\"")) {
+            text = text.substring(1, text.length() - 1);
+        }
+        return new StringValue(text);
+    }
+
+    @Override
+    public AstNode visitNumberValue(AngularParser.NumberValueContext ctx) {
+        String numText = ctx.num.getText();
+        try {
+            if (numText.contains(".")) {
+                return new NumberValue(Double.parseDouble(numText));
+            } else {
+                return new NumberValue(Integer.parseInt(numText));
+            }
+        } catch (NumberFormatException e) {
+            return new NumberValue(0);
+        }
+    }
+
+    @Override
+    public AstNode visitBooleanValue(AngularParser.BooleanValueContext ctx) {
+        return new BooleanValue(Boolean.parseBoolean(ctx.bool.getText()));
+    }
+
+    @Override
+    public AstNode visitIdentifierValue(AngularParser.IdentifierValueContext ctx) {
+        return new IdentifierValue(ctx.id.getText());
+    }
 }

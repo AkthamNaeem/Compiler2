@@ -1,4 +1,4 @@
-package main.java.compiler.ast.arrayOptions;
+package main.java.compiler.ast.types;
 import main.java.compiler.ast.AstNode;
 import main.java.compiler.ast.AstVisitor;
 public class BracketArrayType extends AstNode {

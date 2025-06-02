@@ -1,10 +1,10 @@
-package main.java.compiler.ast.allOptions;
+package main.java.compiler.ast.types;
 
 import main.java.compiler.ast.AstNode;
 import main.java.compiler.ast.AstVisitor;
 
 public class TupleTypeOption extends AstNode {
-    private AstNode tupleOptions;  // The tuple type definition
+    private AstNode tupleOptions;
 
     public AstNode getTupleOptions() { return tupleOptions; }
     public void setTupleOptions(AstNode tupleOptions) { this.tupleOptions = tupleOptions; }
