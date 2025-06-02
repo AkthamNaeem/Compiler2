@@ -51,5 +51,12 @@ public interface AstVisitor<T> {
     T visitGenericAssertion(GenericAssertion node);
 
 
+
+    T visitServiceStringValue(ServiceStringValue node);
+    T visitServiceBooleanValue(ServiceBooleanValue node);
+    T visitServiceNumberValue(ServiceNumberValue node);
+    T visitServiceIdentifierValue(ServiceIdentifierValue node);
+
+
     // 
 }

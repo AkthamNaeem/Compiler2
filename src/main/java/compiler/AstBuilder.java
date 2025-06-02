@@ -612,4 +612,33 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         assertion.setIdentifier(ctx.value.getText());
         return assertion;
     }
+
+
+
+    @Override
+    public AstNode visitServiceStringValue(AngularParser.ServiceStringValueContext ctx) {
+        return new ServiceStringValue(ctx.STRING().getText());
+    }
+
+    @Override
+    public AstNode visitServiceBooleanValue(AngularParser.ServiceBooleanValueContext ctx) {
+        return new ServiceBooleanValue(Boolean.parseBoolean(ctx.BOOLEAN().getText()));
+    }
+
+    @Override
+    public AstNode visitServiceNumberValue(AngularParser.ServiceNumberValueContext ctx) {
+        String numText = ctx.NUMBER().getText();
+        try {
+            return numText.contains(".")
+                    ? new ServiceNumberValue(Double.parseDouble(numText))
+                    : new ServiceNumberValue(Integer.parseInt(numText));
+        } catch (NumberFormatException e) {
+            return new ServiceNumberValue(0);
+        }
+    }
+
+    @Override
+    public AstNode visitServiceIdentifierValue(AngularParser.ServiceIdentifierValueContext ctx) {
+        return new ServiceIdentifierValue(ctx.IDENTIFIER().getText());
+    }
 }
