@@ -35,4 +35,5 @@ public interface AstVisitor<T> {
     T visitInterfaceProperty(InterfaceProperty node);
     T visitInterfaceMethod(InterfaceMethod node);
     T visitClassValue(ClassValue node);
+    T visitFunctionCall(FunctionCall node);
 }

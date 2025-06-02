@@ -651,4 +651,23 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
 
         return classValue;
     }
+
+    @Override
+    public AstNode visitFunctionCall(AngularParser.FunctionCallContext ctx) {
+        FunctionCall functionCall = new FunctionCall();
+
+        if (ctx.name != null) {
+            functionCall.setFunctionName(ctx.name.getText());
+        } else {
+            functionCall.setFunctionName("SUPER");
+        }
+
+        if (ctx.args != null) {
+            for (AngularParser.AllValuesContext argCtx : ctx.args) {
+                functionCall.addArgument(visit(argCtx));
+            }
+        }
+
+        return functionCall;
+    }
 }
