@@ -3,28 +3,58 @@ package main.java.compiler.ast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseFunctionDeclaration extends AstNode {
+
+public class BaseFunctionDeclaration implements AstNode {
     private String name;
-    private List<Parameter> params = new ArrayList<>();
-    private AstNode returnType;
-    private AstNode body;
+    private List<AstNode> accessModifiers = new ArrayList<>();
+    private List<AstNode> functionVariables = new ArrayList<>();
+    private AstNode allOptions; // Represents return type after colon
+    private AstNode functionBody;
 
-    // Getters & Setters
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public String getName() {
+        return name;
+    }
 
-    public List<Parameter> getParams() { return params; }
-    public void addParam(Parameter param) { this.params.add(param); }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public AstNode getReturnType() { return returnType; }
-    public void setReturnType(AstNode returnType) { this.returnType = returnType; }
+    public List<AstNode> getAccessModifiers() {
+        return accessModifiers;
+    }
 
-    public AstNode getBody() { return body; }
-    public void setBody(AstNode body) { this.body = body; }
+    public void setAccessModifiers(List<AstNode> accessModifiers) {
+        this.accessModifiers = accessModifiers;
+    }
+
+    public List<AstNode> getFunctionVariables() {
+        return functionVariables;
+    }
+
+    public void setFunctionVariables(List<AstNode> functionVariables) {
+        this.functionVariables = functionVariables;
+    }
+
+    public AstNode getAllOptions() {
+        return allOptions;
+    }
+
+    public void setAllOptions(AstNode allOptions) {
+        this.allOptions = allOptions;
+    }
+
+    public AstNode getFunctionBody() {
+        return functionBody;
+    }
+
+    public void setFunctionBody(AstNode functionBody) {
+        this.functionBody = functionBody;
+    }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+
         if (name != null) sb.append(name);
         sb.append("(");
         for (int i = 0; i < params.size(); i++) {
@@ -35,6 +65,42 @@ public class BaseFunctionDeclaration extends AstNode {
         if (returnType != null) sb.append(" : ").append(returnType.toString());
         sb.append(" ").append(body.toString());
         return sb.toString();
+
+
+        if (name != null) {
+            sb.append(name);
+        }
+
+        sb.append("(");
+        for (int i = 0; i < functionVariables.size(); i++) {
+            if (i < accessModifiers.size() && accessModifiers.get(i) != null) {
+                sb.append(accessModifiers.get(i).toString()).append(" ");
+            }
+            sb.append(functionVariables.get(i).toString());
+
+            if (i < functionVariables.size() - 1) {
+                sb.append(", ");
+            }
+        }
+        sb.append(")");
+
+        if (allOptions != null) {
+            sb.append(": ").append(allOptions.toString());
+        }
+
+        sb.append(" {\n");
+        if (functionBody != null) {
+            sb.append("\t").append(functionBody.toString());
+        }
+        sb.append("\n}");
+
+        return sb.toString();
+    }
+
+    @Override
+    public <T> T accept(AstVisitor<T> visitor) {
+        return visitor.visitBaseFunctionDeclaration(this);
+
     }
 
     @Override
