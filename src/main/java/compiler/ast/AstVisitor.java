@@ -41,4 +41,11 @@ public interface AstVisitor<T> {
     T visitComparisonExpression(ComparisonExpression node);
     T visitAdditiveExpression(AdditiveExpression node);
     T visitMultiplicativeExpression(MultiplicativeExpression node);
+    T visitPrimaryIdentifier(PrimaryIdentifier node);
+    T visitPrimaryNumber(PrimaryNumber node);
+    T visitPrimaryString(PrimaryString node);
+    T visitPrimaryParenthesized(PrimaryParenthesized node);
+    T visitPrimaryObject(PrimaryObject node);
+    T visitPrimaryArray(PrimaryArray node);
+    T visitPrimaryArithmetic(PrimaryArithmetic node);
 }

@@ -744,4 +744,40 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         return expr;
     }
 
+    @Override
+    public AstNode visitPrimaryIdentifier(AngularParser.PrimaryIdentifierContext ctx) {
+        return new PrimaryIdentifier(ctx.id.getText());
+    }
+
+    @Override
+    public AstNode visitPrimaryNumber(AngularParser.PrimaryNumberContext ctx) {
+        return new PrimaryNumber(ctx.num.getText());
+    }
+
+    @Override
+    public AstNode visitPrimaryString(AngularParser.PrimaryStringContext ctx) {
+        return new PrimaryString(ctx.str.getText());
+    }
+
+    @Override
+    public AstNode visitPrimaryParenthesized(AngularParser.PrimaryParenthesizedContext ctx) {
+        return new PrimaryParenthesized(visit(ctx.expr));
+    }
+
+    @Override
+    public AstNode visitPrimaryObject(AngularParser.PrimaryObjectContext ctx) {
+        return visit(ctx.obj);
+    }
+
+    @Override
+    public AstNode visitPrimaryArray(AngularParser.PrimaryArrayContext ctx) {
+        return visit(ctx.arr);
+    }
+
+    @Override
+    public AstNode visitPrimaryArithmetic(AngularParser.PrimaryArithmeticContext ctx) {
+        return visit(ctx.arith);
+    }
+
+
 }
