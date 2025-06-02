@@ -594,4 +594,19 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
 
         return functionCall;
     }
+
+    @Override
+    public AstNode visitAssignValue(AngularParser.AssignValueContext ctx) {
+        AssignValue assignValue = new AssignValue();
+
+        if (ctx.target != null) {
+            assignValue.setTarget(ctx.target.getText());
+        } else if (ctx.objTarget != null) {
+            assignValue.setObjTarget(visit(ctx.objTarget));
+        }
+
+        assignValue.setValue(visit(ctx.value));
+
+        return assignValue;
+    }
 }

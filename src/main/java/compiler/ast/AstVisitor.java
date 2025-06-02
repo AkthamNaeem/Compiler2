@@ -30,4 +30,5 @@ public interface AstVisitor<T> {
     T visitObjectNode(ObjectNode node);
     T visitObjectValue(ObjectValue node);
     T visitObjectFunctionCall(ObjectFunctionCall node);
+    T visitAssignValue(AssignValue node);
 }
