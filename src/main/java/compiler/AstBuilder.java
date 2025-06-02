@@ -502,4 +502,18 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
     public AstNode visitNullValue(AngularParser.NullValueContext ctx) {
         return new NullValue();
     }
+
+    @Override
+    public AstNode visitBracketArrayType(AngularParser.BracketArrayTypeContext ctx) {
+        BracketArrayType node = new BracketArrayType();
+        node.setType(visit(ctx.type));  // Visit the typeOptions rule
+        return node;
+    }
+
+    @Override
+    public AstNode visitGenericArrayType(AngularParser.GenericArrayTypeContext ctx) {
+        GenericArrayType node = new GenericArrayType();
+        node.setType(visit(ctx.type));  // Visit the typeOptions rule
+        return node;
+    }
 }

@@ -31,5 +31,9 @@ public interface AstVisitor<T> {
     T visitNullValue(NullValue node);
 
 
+    T visitBracketArrayType(BracketArrayType node);
+    T visitGenericArrayType(GenericArrayType node);
+
+
     // 
 }
