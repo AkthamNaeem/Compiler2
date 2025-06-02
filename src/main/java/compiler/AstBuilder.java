@@ -779,5 +779,28 @@ public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
         return visit(ctx.arith);
     }
 
+    @Override
+    public AstNode visitStringConcatenation(AngularParser.StringConcatenationContext ctx) {
+        String leftStr = ctx.leftStr.getText();
+        leftStr = leftStr.substring(1, leftStr.length() - 1);
+        AstNode rightExpr = visit(ctx.rightExpr);
+        return new StringConcatenation(leftStr, rightExpr);
+    }
+
+    @Override
+    public AstNode visitIdentifierConcatenation(AngularParser.IdentifierConcatenationContext ctx) {
+        String leftId = ctx.leftId.getText();
+        AstNode rightExpr = visit(ctx.rightExpr);
+        return new IdentifierConcatenation(leftId, rightExpr);
+    }
+
+    @Override
+    public AstNode visitNestedAddition(AngularParser.NestedAdditionContext ctx) {
+        AdditionExpression leftAdd = (AdditionExpression) visit(ctx.leftAdd);
+        AstNode rightExpr = visit(ctx.rightExpr);
+        return new NestedAddition(leftAdd, rightExpr);
+    }
+
+
 
 }

@@ -48,4 +48,7 @@ public interface AstVisitor<T> {
     T visitPrimaryObject(PrimaryObject node);
     T visitPrimaryArray(PrimaryArray node);
     T visitPrimaryArithmetic(PrimaryArithmetic node);
+    T visitStringConcatenation(StringConcatenation node);
+    T visitIdentifierConcatenation(IdentifierConcatenation node);
+    T visitNestedAddition(NestedAddition node);
 }
