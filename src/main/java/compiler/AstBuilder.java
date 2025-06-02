@@ -9,6 +9,21 @@ import main.resources.gen.AngularParser;
 import main.resources.gen.AngularParserBaseVisitor;
 
 public class AstBuilder extends AngularParserBaseVisitor<AstNode> {
+
+    @Override
+    public AstNode visitInstruction(AngularParser.InstructionContext ctx) {
+        Instruction instruction = new Instruction();
+
+        // Process all statements
+        for (AngularParser.StatementContext stmtCtx : ctx.statement()) {
+            instruction.addStatement(visit(stmtCtx));
+        }
+
+        return instruction;
+    }
+
+
+
     @Override
     public AstNode visitConstStatement (AngularParser.ConstStatementContext ctx) {
         AstNode constStatement = visit (ctx.constDeclaration ());
